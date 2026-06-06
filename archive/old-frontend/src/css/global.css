@@ -1,0 +1,178 @@
+@import url("buttons.css");
+@import url("layout.css");
+
+/* 
+ * global.css
+ * Main stylesheet containing design tokens, resets, and core layout components.
+ */
+
+/* ==========================================================================
+   DESIGN TOKENS (Variables)
+   ========================================================================== */
+:root {
+  /* Color Palette */
+  --color-page-bg: #f0f2f5;
+  --color-surface: #ffffff;
+  --color-primary: #387bd5;
+  --color-primary-600: #3b82f6;
+  --color-header-title:  #FFFFFF;
+  --color-header-subtitle: #E0F2FE;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-border: #d1d5db;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size-base: 16px;
+  --title-size: 35px;
+  --subtitle-size: 18px;
+  --h1-size: 24px;
+  --h2-size: 20px;
+  --h3-size: 16px;
+  --p-size: 15px;
+  --small-size: 13px;
+
+  /* Spacing (Percentage of viewport height/vh) */
+  --space-xs: 0.5vh;
+  --space-s: 1vh;
+  --space-m: 1.5vh;
+  --space-l: 2vh;
+  --space-xl: 2.5vh;
+  --space-xxl: 3vh;
+
+  /* Radii & layout */
+  --radius: 12px;
+  --pill-radius: 30px;
+  --app-max-width: 380px;
+  --app-max-height: 760px;
+
+  /* Elevation */
+  --shadow-1: 0 6px 16px rgba(0,0,0,0.04);
+  --shadow-2: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* ==========================================================================
+   1. GLOBAL RESET & BOX SIZING
+   Ensures consistent sizing and removes default browser margins/padding.
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent iOS Safari from auto-zooming on focus and double-taps */
+input, textarea, select {
+  font-size: max(16px, 1em);
+}
+a, button, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* ==========================================================================
+   2. BODY & TYPOGRAPHY SETUP
+   Defines the base font styles and centers the mobile container on desktop.
+   ========================================================================== */
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Base typographic elements */
+html { -webkit-text-size-adjust: 100%; }
+h1 { font-size: var(--h1-size); font-weight: 700; line-height: 1.2; }
+h2 { font-size: var(--h2-size); font-weight: 600; line-height: 1.25; }
+h3 { font-size: var(--h3-size); font-weight: 600; line-height: 1.3; }
+p { font-size: var(--p-size); font-weight: 400; line-height: 1.5; color: var(--color-text); }
+small, .text-small { font-size: var(--small-size); color: var(--color-muted); }
+.header-title { flex: 1; text-align: center; color:var(--color-header-title); font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+.header-subtitle { color: var(--color-header-subtitle); font-size: 14px; margin: 4px 10px 0px 10px; }
+
+/* ==========================================================================
+   3. MOBILE APP CONTAINER
+   The main wrapper that simulates a mobile device screen on larger displays.
+   ========================================================================== */
+.mobile-app-container {
+  height: 100vh;
+  max-height: 900px ;
+  aspect-ratio: 375 / 800;
+  max-width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border); /* Defines the container edge */
+  border-radius: var(--radius);           /* Rounds corners like a mobile device */
+  box-shadow: var(--shadow-2);           /* Adds depth/elevation */
+  overflow-y: auto;                      /* Enables vertical scrolling for long content */
+  overflow-x: hidden;                    /* Prevents horizontal overflow */
+  position: relative;                    /* Anchor for absolute-positioned children */
+}
+
+/* ==========================================================================
+   4. CONTENT SPACING
+   Standardized internal padding for page content.
+   ========================================================================== */
+.app-content {
+  padding: var(--space-xl);
+}
+
+/* ==========================================================================
+   5. RESPONSIVE ADJUSTMENTS
+   Removes the "device frame" styles when viewed on actual mobile screens.
+   ========================================================================== */
+@media (max-width: 380px) {
+  .mobile-app-container {
+    width: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+/* ==========================================================================
+   6. REUSABLE LAYOUT COMPONENTS
+   ========================================================================== */
+
+/* Fixed Header: Top navigation area with a subtle gradient and curved bottom */
+.fixed-header {
+  background: linear-gradient(180deg, rgba(59,130,246,0.12) 0%, rgba(226,239,250,1) 100%);
+  border-radius: 0 0 50% 50% / 0 0 25px 25px;
+  padding: 48px var(--space-l) calc(var(--space-xl) + 5px) var(--space-l);
+  z-index: 20;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: var(--shadow-1);
+}
+
+/* Stepper: Visual progress indicators for multi-step flows */
+.stepper {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-s);
+  margin-top: var(--space-l);
+}
+
+.step {
+  height: 5px;
+  width: 60px;
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+.step.active {
+  background: var(--color-primary-600);
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   Quick helper classes for common styling needs.
+   ========================================================================== */
+.text-center { text-align: center; }
+.muted { color: var(--color-muted); }
+.divider { height: 1px; background: var(--color-border); width: 100%; }

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - My Clients</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/clients.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>My Clients</h1>
+                    <p>You have 32 active clients</p>
+                </div>
+            </header>
+
+            <div class="clients-filter-bar">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">All Clients</button>
+                    <button class="filter-tab">First Session</button>
+                    <button class="filter-tab">Archived</button>
+                    <button class="filter-tab">Last Session in One Week</button>
+                </div>
+                <div class="search-clients">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search clients by name or email...">
+                </div>
+            </div>
+
+            <div class="clients-container">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Client Details
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th>Status</th>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Last Session
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Next Session
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=5" alt="Sarah Johnson">
+                                    <div>
+                                        <span class="client-name">Sarah Johnson</span>
+                                        <span class="client-email">sarah.j@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 12, 2023</td>
+                        <td><strong>Oct 24, 2023</strong><br>(09:00 AM)</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=12" alt="Michael Chen">
+                                    <div>
+                                        <span class="client-name">Michael Chen</span>
+                                        <span class="client-email">m.chen@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 18, 2023</td>
+                        <td><strong>Oct 24, 2023</strong><br>(10:30 AM)</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=32" alt="Priya Patel">
+                                    <div>
+                                        <span class="client-name">Priya Patel</span>
+                                        <span class="client-email">priya.p@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-paused">Paused</span></td>
+                            <td>Sep 28, 2023</td>
+                            <td>To be scheduled</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=9" alt="Emma Wilson">
+                                    <div>
+                                        <span class="client-name">Emma Wilson</span>
+                                        <span class="client-email">emma.w@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 20, 2023</td>
+                        <td><strong>Oct 27, 2023</strong><br>(02:00 PM)</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=11" alt="James Rodriguez">
+                                    <div>
+                                        <span class="client-name">James Rodriguez</span>
+                                        <span class="client-email">james.r@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 21, 2023</td>
+                        <td><strong>Oct 28, 2023</strong><br>(11:00 AM)</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=47" alt="Lisa Thompson">
+                                    <div>
+                                        <span class="client-name">Lisa Thompson</span>
+                                        <span class="client-email">lisa.t@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 23, 2023</td>
+                        <td><strong>Oct 30, 2023</strong><br>(01:00 PM)</td>
+                            <td><a href="./workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Pagination at the bottom of the container -->
+                <div class="pagination-container">
+                    <div class="pagination-info">Showing 1 to 6 of 32 entries</div>
+                    <div class="pagination-nav">
+                        <button class="page-btn disabled">Previous</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-dots">...</span>
+                        <button class="page-btn">6</button>
+                        <button class="page-btn">Next</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('./Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the third item (My Clients)
+                    navItems[2].classList.add('active');
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    // Restore state from LocalStorage
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+                
+                // Filter Tabs Toggle Logic
+                const filterTabs = document.querySelectorAll('.filter-tab');
+                filterTabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        filterTabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                    });
+                });
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>

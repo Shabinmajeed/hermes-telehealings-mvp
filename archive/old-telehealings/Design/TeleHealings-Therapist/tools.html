@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Clinical Tools</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/tools.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Clinical Tools Library</h1>
+                    <p>Access and assign assessments, worksheets, and templates.</p>
+                </div>
+            </header>
+
+            <div class="tools-filter-bar">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">All Tools</button>
+                    <button class="filter-tab">Assessments</button>
+                    <button class="filter-tab">Worksheets</button>
+                    <button class="filter-tab">Templates</button>
+                </div>
+                <div class="search-tools">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search tools...">
+                </div>
+            </div>
+
+            <div class="tools-grid">
+                
+                <!-- Tool 1 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-assessment">Assessment</span>
+                    <h3>PHQ-9 Depression Scale</h3>
+                    <p>Standardized 9-question instrument for screening, diagnosing, monitoring and measuring the severity of depression.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Preview</button>
+                        <button class="btn-primary-sm">Send to Client</button>
+                    </div>
+                </div>
+
+                <!-- Tool 2 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-assessment">Assessment</span>
+                    <h3>GAD-7 Anxiety Scale</h3>
+                    <p>Brief clinical measure for assessing generalized anxiety disorder. Automatically scores and tracks over time.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Preview</button>
+                        <button class="btn-primary-sm">Send to Client</button>
+                    </div>
+                </div>
+
+                <!-- Tool 3 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-worksheet">Worksheet</span>
+                    <h3>CBT Thought Record</h3>
+                    <p>Interactive digital worksheet helping clients identify negative automatic thoughts and restructure them.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Preview</button>
+                        <button class="btn-primary-sm">Send to Client</button>
+                    </div>
+                </div>
+
+                <!-- Tool 4 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-worksheet">Worksheet</span>
+                    <h3>Core Beliefs Matrix</h3>
+                    <p>A deep-dive exercise allowing clients to map out unhelpful core beliefs and gather evidence for healthier alternatives.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Preview</button>
+                        <button class="btn-primary-sm">Send to Client</button>
+                    </div>
+                </div>
+
+                <!-- Tool 5 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-template">Template</span>
+                    <h3>Standard SOAP Note</h3>
+                    <p>A quick-fill clinical documentation template covering Subjective, Objective, Assessment, and Plan structures.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Edit Template</button>
+                        <button class="btn-primary-sm">Use Now</button>
+                    </div>
+                </div>
+                
+                <!-- Tool 6 -->
+                <div class="tool-card">
+                    <span class="tool-badge badge-template">Template</span>
+                    <h3>Initial Intake Assessment</h3>
+                    <p>Comprehensive structured outline for a client's first session, covering psychosocial history and goal setting.</p>
+                    <div class="card-actions">
+                        <button class="btn-outline">Edit Template</button>
+                        <button class="btn-primary-sm">Use Now</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('./Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the sixth item (Tools)
+                    if(navItems.length > 5) {
+                        navItems[5].classList.add('active');
+                    }
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>

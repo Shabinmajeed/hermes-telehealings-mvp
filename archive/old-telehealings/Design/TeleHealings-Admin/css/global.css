@@ -1,0 +1,53 @@
+:root {
+  /* 11-inch Tablet (e.g., iPad Pro 11") CSS Viewport Dimensions */
+  --viewport-width: 1194px;
+  --viewport-height: 834px;
+
+  /* Brand Colors from Design */
+  --color-primary: #2a73d4;
+  --color-primary-hover: #2361b5;
+  --text-main: #111111;
+  --text-muted: #4b4b4b;
+  --bg-gradient-start: #ffffff;
+  --bg-gradient-mid: #eef5fc;
+  --bg-gradient-end: #7aaaf6;
+}
+
+/* Standard CSS Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the tablet layout vertically and horizontally within the browser viewport */
+html {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  /* Prevents the body's background from propagating to the entire browser window */
+  background-color: #e5e5e5;
+}
+
+/* 
+  Since the pages are specifically designed for an 11-inch tablet,
+  we constrain the main body to act exactly like a tablet viewport.
+  On larger screens, this will center the tablet-sized layout.
+*/
+body {
+  width: 100%;
+  max-width: var(--viewport-width);
+  min-height: var(--viewport-height);
+  margin: 0 auto; /* Centers the layout on screens larger than 834px */
+  position: relative;
+  
+  /* Optional: Adds a subtle shadow on desktop to show the tablet boundaries */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+
+  /* Global Typography & Background */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-main);
+  background: linear-gradient(110deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 35%, var(--bg-gradient-end) 100%);
+  overflow-x: hidden;
+}

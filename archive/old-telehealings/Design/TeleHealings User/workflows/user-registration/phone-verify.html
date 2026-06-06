@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Phone Verify</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    /* Animation Keyframes */
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+
+    /* Form Section */
+    .form-section {
+      flex: 1;
+      padding: 24px 24px 32px 24px;
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+      background-color: #ffffff;
+      overflow-y: auto;
+      animation: slideFadeUp 0.5s ease-out forwards;
+    }
+
+    .input-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .phone-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .country-select {
+      position: relative;
+      width: 96px; /* Widened to fit the flag and code */
+      height: 48px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #f8fafc;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .country-select svg {
+      color: #1a293b;
+    }
+
+    .country-select:focus-within {
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .country-code {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a293b;
+      pointer-events: none; /* Passes clicks to the hidden select */
+    }
+
+    .hidden-country-select {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .phone-input {
+      flex: 1;
+      width: 100%;
+      height: 48px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 16px;
+      padding: 0 16px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a293b;
+      background: #f8fafc;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .phone-input::placeholder {
+      color: #637b96;
+      font-weight: 400;
+    }
+
+    .phone-input:focus {
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    /* OTP Section */
+    .otp-section {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.4s ease, margin-bottom 0.4s ease;
+    }
+
+    .otp-section.active {
+      max-height: 100px;
+      opacity: 1;
+      margin-bottom: 24px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .otp-box {
+      flex: 1;
+      min-width: 0;
+      height: 52px;
+      background: rgba(59, 130, 246, 0.05); /* Soft, inviting pale blue tint */
+      border: 1px solid transparent;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a293b;
+      outline: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .otp-box:focus {
+      background: #ffffff;
+      border-color: #387bd5;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+    }
+
+    #actionBtn {
+      margin-bottom: 24px;
+      /* Follow similar colour gradiant of call to action to top-bg-curve */
+      background: var(--color-primary);
+      color: #ffffff;
+      border: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(56, 123, 213, 0.25);
+    }
+
+    /* Social Buttons */
+    .social-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: auto;
+      margin-bottom: 40px;
+    }
+
+    .btn-social {
+      flex: 1;
+      max-width: 140px;
+      height: 50px;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 25px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a293b;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-social:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Support Link */
+    .support-text {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+      padding-bottom: 24px;
+    }
+
+    .support-link {
+      color: #000000;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-app-container verify-container">
+    
+    <!-- Top Curved Section -->
+    <div class="top-section">
+      <div class="header-row">
+        <div class="back-btn" onclick="window.location.href='../../home.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </div>
+        <h1 class="header-title">Verify Phone</h1>
+        <div class="header-heali">
+          <img src="../../src/heali-phone.png" alt="Heali Mascot with Phone">
+        </div>
+      </div>
+      <p class="header-subtitle">We will send you a one-time password to verify your account.</p>
+    </div>
+
+    <!-- Form Section -->
+    <div class="form-section">
+      <label class="input-label">Phone Number</label>
+      
+      <div class="phone-input-group">
+        <div class="country-select" tabindex="0">
+          <span class="country-code" id="countryCodeDisplay">🇺🇸 +1</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none; color: #64748b;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+          <select class="hidden-country-select" id="countrySelect">
+            <option value="+1">🇺🇸 +1 (US)</option>
+            <option value="+44">🇬🇧 +44 (UK)</option>
+            <option value="+91">🇮🇳 +91 (IN)</option>
+            <option value="+61">🇦🇺 +61 (AU)</option>
+            <option value="+1">🇨🇦 +1 (CA)</option>
+          </select>
+        </div>
+        <input type="tel" class="phone-input" id="phoneInput" placeholder="000 000 0000" maxlength="12">
+      </div>
+
+      <!-- Hidden OTP Section -->
+      <div class="otp-section" id="otpSection">
+        <label class="input-label">Enter 6-Digit OTP</label>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+          <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+        </div>
+      </div>
+
+      <button class="btn-primary" id="actionBtn">
+        <span>Generate OTP</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+
+      <div class="social-group">
+        <!-- Google Button -->
+        <button class="btn-social">
+          <img src="../../src/google.png" alt="Google" style="width: 18px; height: 18px; object-fit: contain;"> 
+          Google
+        </button>
+        <!-- Apple Button -->
+        <button class="btn-social">
+          <img src="../../src/apple.png" alt="Apple" style="width: 18px; height: 18px; object-fit: contain;"> 
+          Apple
+        </button>
+      </div>
+
+      <div class="support-text">
+        Having trouble? <span class="support-link">Contact Support</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const actionBtn = document.getElementById('actionBtn');
+    const otpSection = document.getElementById('otpSection');
+    const otpBoxes = document.querySelectorAll('.otp-box');
+    const phoneInput = document.getElementById('phoneInput');
+    const countrySelect = document.getElementById('countrySelect');
+    const countryCodeDisplay = document.getElementById('countryCodeDisplay');
+    let currentState = 'generate';
+
+    // 0. Update Country Code Display
+    if (countrySelect && countryCodeDisplay) {
+      countrySelect.addEventListener('change', function() {
+        const selectedText = this.options[this.selectedIndex].text;
+        // Extracts just the flag and the code (e.g., "🇺🇸 +1")
+        const match = selectedText.match(/(.*? \+\d+)/);
+        countryCodeDisplay.textContent = match ? match[1] : this.value;
+      });
+    }
+
+    // 1. Format Phone Number (Add spaces: 123 456 7890)
+    phoneInput.addEventListener('input', function (e) {
+      let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      e.target.value = !x[2] ? x[1] : x[1] + ' ' + x[2] + (x[3] ? ' ' + x[3] : '');
+    });
+
+    // 2. Handle button click (Generate -> Verify)
+    actionBtn.addEventListener('click', () => {
+      if (currentState === 'generate') {
+        // Show OTP section
+        otpSection.classList.add('active');
+        
+        // Change button UI
+        actionBtn.innerHTML = `
+          <span>Verify</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        currentState = 'verify';
+        
+        // Auto-focus the first OTP box
+        setTimeout(() => otpBoxes[0].focus(), 400); // Wait for transition
+      } else {
+        // Verify action - proceed to next step
+        window.location.href = './profile-completion.html';
+      }
+    });
+
+    // 3. Auto-advance OTP inputs
+    otpBoxes.forEach((box, index) => {
+      box.addEventListener('input', (e) => {
+        // Auto-move to next input
+        if (e.target.value.length === 1 && index < otpBoxes.length - 1) {
+          otpBoxes[index + 1].focus();
+        }
+      });
+      box.addEventListener('keydown', (e) => {
+        // Move back on backspace if empty
+        if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+          otpBoxes[index - 1].focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

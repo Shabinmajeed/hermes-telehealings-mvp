@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Compliance & Verification</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        /* --- Base Layout --- */
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; overflow: hidden; background: transparent; }
+
+        .app-shell { display: flex; width: 100%; height: 100%; }
+        .sidebar-container { flex-shrink: 0; }
+        .page-shell { flex: 1; padding: 24px 32px; overflow-y: auto; background: transparent; }
+        .content-wrapper { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
+
+        /* --- Header --- */
+        .page-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #e2e8f0; margin-bottom: 12px; padding-bottom: 0; }
+        .header-tab { font-size: 20px; font-weight: 700; color: #0f172a; padding: 0 0 12px 0; position: relative; }
+        .header-tab::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: #0f172a; border-radius: 2px 2px 0 0; }
+        .header-mascot { height: 48px; margin-bottom: -1px; }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav { display: flex; gap: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; }
+        .tab-btn { background: transparent; border: none; padding: 10px 4px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; position: relative; transition: color 0.2s; }
+        .tab-btn:hover { color: #0f172a; }
+        .tab-btn.active { color: #2563eb; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #2563eb; border-radius: 2px 2px 0 0; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- Toolbar --- */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 16px; }
+        .search-wrap { position: relative; width: 240px; }
+        .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #64748b; }
+        .search-input { width: 100%; padding: 10px 16px 10px 38px; border-radius: 99px; border: 1px solid #cbd5e1; background: transparent; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .search-input:focus { border-color: #3b82f6; }
+        .btn-pill { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 99px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-pill svg { width: 16px; height: 16px; }
+        .btn-outline { border: 1px solid #0f172a; background: transparent; color: #0f172a; }
+        .btn-outline:hover { background: #f1f5f9; }
+        .btn-primary { border: 1px solid #2563eb; background: #2563eb; color: #ffffff; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        /* --- Table Card --- */
+        .table-card { background: #ffffff; border-radius: 16px; padding: 24px 32px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 20px; }
+        .clients-table { width: 100%; border-collapse: collapse; }
+        .clients-table th { text-align: left; font-size: 13px; font-weight: 500; color: #64748b; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+        .clients-table td { padding: 16px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; vertical-align: middle; }
+        .clients-table tr:last-child td { border-bottom: none; }
+
+        .user-cell { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
+        .user-details { display: flex; flex-direction: column; }
+        .user-name { font-weight: 600; color: #0f172a; font-size: 14px; }
+        .sub-text { display: block; font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+        /* Status Badges */
+        .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; min-width: 90px; text-align: center; }
+        .status-verified { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-pending { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+        .status-expired { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .status-missing { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+        .action-btn { background: transparent; border: 1px solid #cbd5e1; color: #334155; cursor: pointer; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .action-btn:hover { background: #f1f5f9; border-color: #94a3b8; }
+
+        /* --- Pagination --- */
+        .pagination-container { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; }
+        .pagination-info { font-size: 12px; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase; }
+        .pagination-nav { display: flex; gap: 8px; }
+        .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: none; background: #f1f5f9; color: #334155; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .page-btn:hover { background: #e2e8f0; }
+        .page-btn.active { background: #2563eb; color: #ffffff; }
+
+        /* --- Modal Styles --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.2s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-card { background: #ffffff; width: 650px; max-width: 90%; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transform: scale(0.95); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; overflow: hidden; }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+        .modal-title { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;}
+        .modal-title svg { color: #2563eb; }
+        .modal-close { background: transparent; border: none; cursor: pointer; color: #64748b; padding: 4px; border-radius: 50%; }
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
+        
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .doc-preview-area { background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 12px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #64748b; gap: 12px; }
+        .doc-preview-area svg { width: 48px; height: 48px; color: #94a3b8; }
+
+        .doc-meta { display: flex; flex-direction: column; gap: 8px; }
+        .meta-row { display: flex; justify-content: space-between; font-size: 13px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+        .meta-label { color: #64748b; font-weight: 500; }
+        .meta-value { color: #0f172a; font-weight: 600; }
+
+        .modal-footer { padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; background: #fafafa; align-items: center; }
+        .footer-actions { display: flex; gap: 12px; }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Sidebar Navigation (Injected) -->
+        <div class="sidebar-container" id="sidebar-container"></div>
+
+        <div class="page-shell">
+            <div class="content-wrapper">
+
+                <!-- Header -->
+                <header class="page-header">
+                    <div class="header-tab">Compliance & Verification</div>
+                    <img src="src/Heali-peak.png" class="header-mascot" alt="Mascot">
+                </header>
+
+                <!-- Tabs Navigation -->
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-target="tab-pending">Pending Reviews <span style="background: #ef4444; color: white; border-radius: 99px; padding: 2px 6px; font-size: 11px; margin-left: 6px;">3</span></button>
+                    <button class="tab-btn" data-target="tab-all">All Records</button>
+                    <button class="tab-btn" data-target="tab-expiring">Expiring Soon</button>
+                </div>
+
+                <!-- Tab Content: Pending Reviews -->
+                <div id="tab-pending" class="tab-content active">
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" class="search-input" placeholder="Search therapists...">
+                            </div>
+                            <button class="btn-pill btn-outline">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                Filters
+                            </button>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-pill btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                Export Compliance Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">Therapist</th>
+                                    <th style="width: 15%">Clinical License</th>
+                                    <th style="width: 15%">Background Check</th>
+                                    <th style="width: 15%">Indemnity Ins.</th>
+                                    <th style="width: 15%">Next Verification</th>
+                                    <th style="width: 15%; text-align:right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingTableBody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Tab Content: All Records (Placeholder for layout) -->
+                <div id="tab-all" class="tab-content">
+                    <div class="table-card">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">Therapist</th>
+                                    <th style="width: 15%">Clinical License</th>
+                                    <th style="width: 15%">Background Check</th>
+                                    <th style="width: 15%">Indemnity Ins.</th>
+                                    <th style="width: 15%">Next Verification</th>
+                                    <th style="width: 15%; text-align:right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allTableBody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                        
+                        <div class="pagination-container">
+                            <div class="pagination-info">SHOWING 1 OF 5 PAGES</div>
+                            <div class="pagination-nav">
+                                <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">2</button>
+                                <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Expiring Soon (Placeholder) -->
+                <div id="tab-expiring" class="tab-content">
+                    <div class="table-card">
+                        <p style="color: #64748b; font-size: 14px; text-align: center; padding: 40px 0;">No documents expiring within the next 30 days.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Document Review
+                </div>
+                <button class="modal-close" id="closeReviewModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="user-cell" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <img src="https://i.pravatar.cc/150?u=sarah" class="avatar" alt="Dr. Sarah" id="modalAvatar">
+                    <div class="user-details">
+                        <span class="user-name" id="modalName">Dr. Sarah Smith</span>
+                        <span class="sub-text" style="margin-top:0;">Therapist ID: T-8492</span>
+                    </div>
+                </div>
+
+                <div class="doc-meta">
+                    <div class="meta-row">
+                        <span class="meta-label">Document Type</span>
+                        <span class="meta-value" style="color: #2563eb;">Clinical License Renewal</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">Submitted On</span>
+                        <span class="meta-value">25/04/2026, 09:14 AM</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">Issuing Authority</span>
+                        <span class="meta-value">National Board of Psychology</span>
+                    </div>
+                </div>
+
+                <div class="doc-preview-area">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    <span style="font-weight: 500; font-size: 14px; color: #475569;">Clinical_License_2026.pdf</span>
+                    <button class="btn-pill btn-outline" style="padding: 6px 12px; font-size: 12px; margin-top: 8px;">Download to View</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-pill btn-outline" style="color: #dc2626; border-color: #fecaca;" id="rejectBtn">Reject Document</button>
+                <div class="footer-actions">
+                    <button class="btn-pill btn-outline" id="cancelReviewBtn">Cancel</button>
+                    <button class="btn-pill btn-primary" style="background: #16a34a; border-color: #16a34a;">Approve & Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        const complianceData = [
+            { id: 1, name: "Dr. Sarah Smith", type: "pending", license: "Pending", bgCheck: "Verified", insurance: "Verified", nextVerify: "24/05/2026", avatar: "https://i.pravatar.cc/150?u=sarah" },
+            { id: 2, name: "Dr. Ethan Hunt", type: "pending", license: "Verified", bgCheck: "Pending", insurance: "Expired", nextVerify: "Action Required", avatar: "https://i.pravatar.cc/150?u=ethan" },
+            { id: 3, name: "Dr. Olivia Wilde", type: "pending", license: "Missing", bgCheck: "Missing", insurance: "Pending", nextVerify: "Action Required", avatar: "https://i.pravatar.cc/150?u=olivia" },
+            { id: 4, name: "Dr. Ajesh Anand", type: "all", license: "Verified", bgCheck: "Verified", insurance: "Verified", nextVerify: "15/11/2026", avatar: "https://i.pravatar.cc/150?u=ajesh" },
+            { id: 5, name: "Dr. Emily Chen", type: "all", license: "Verified", bgCheck: "Verified", insurance: "Verified", nextVerify: "02/09/2026", avatar: "https://i.pravatar.cc/150?u=emily" },
+            { id: 6, name: "Dr. Marcus Reed", type: "all", license: "Verified", bgCheck: "Verified", insurance: "Verified", nextVerify: "18/12/2026", avatar: "https://i.pravatar.cc/150?u=marcus" }
+        ];
+
+        // Helper to generate badges
+        function getBadge(status) {
+            const lower = status.toLowerCase();
+            if (lower === 'verified') return `<span class="status-badge status-verified">Verified</span>`;
+            if (lower === 'pending') return `<span class="status-badge status-pending">Pending Review</span>`;
+            if (lower === 'expired') return `<span class="status-badge status-expired">Expired</span>`;
+            if (lower === 'missing') return `<span class="status-badge status-missing">Missing</span>`;
+            return `<span class="status-badge">${status}</span>`;
+        }
+
+        function populateTables() {
+            const pendingBody = document.getElementById('pendingTableBody');
+            const allBody = document.getElementById('allTableBody');
+            
+            complianceData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <img src="${item.avatar}" class="avatar" alt="${item.name}">
+                            <div class="user-details">
+                                <span class="user-name">${item.name}</span>
+                                <span class="sub-text">ID: T-100${item.id}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${getBadge(item.license)}</td>
+                    <td>${getBadge(item.bgCheck)}</td>
+                    <td>${getBadge(item.insurance)}</td>
+                    <td><span style="font-size: 13px; color: ${item.nextVerify.includes('Required') ? '#dc2626; font-weight: 600;' : '#475569;'}">${item.nextVerify}</span></td>
+                    <td style="text-align:right;">
+                        <button class="action-btn btn-review" data-name="${item.name}" data-avatar="${item.avatar}">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            Review
+                        </button>
+                    </td>
+                `;
+                
+                if (item.type === 'pending') {
+                    pendingBody.appendChild(tr.cloneNode(true));
+                }
+                allBody.appendChild(tr);
+            });
+        }
+
+        populateTables();
+
+        // Sidebar Injection Logic
+        function initializeSidebarToggle() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                });
+            }
+        }
+
+        async function injectSidebar() {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+            try {
+                const response = await fetch('./components/side-bar.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                const styleElement = doc.querySelector('style');
+                if (styleElement) {
+                    document.head.appendChild(styleElement.cloneNode(true));
+                }
+
+                const bodyChildren = Array.from(doc.body.childNodes);
+                bodyChildren.forEach(node => {
+                    if (node.nodeName.toLowerCase() === 'script') return;
+                    container.appendChild(node.cloneNode(true));
+                });
+
+                const images = container.querySelectorAll('img');
+                images.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && src.startsWith('../src/')) {
+                        img.setAttribute('src', src.replace('../src/', 'src/'));
+                    }
+                });
+
+                initializeSidebarToggle();
+                
+                // Highlight "Compliance" in sidebar
+                setTimeout(() => {
+                    const navItems = container.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    const complianceNav = Array.from(navItems).find(item => item.getAttribute('href').includes('compliance.html'));
+                    if(complianceNav) complianceNav.classList.add('active');
+                }, 50);
+
+            } catch (error) {
+                container.innerHTML = '<div style="padding: 24px; color: #b91c1c;">Failed to load sidebar component.</div>';
+                console.error('Sidebar injection failed:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', injectSidebar);
+
+        // Tabs Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.target).classList.add('active');
+                });
+            });
+        });
+
+        // Modal Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('reviewModal');
+            const btnClose = document.getElementById('closeReviewModal');
+            const btnCancel = document.getElementById('cancelReviewBtn');
+            
+            const toggleModal = () => modal.classList.toggle('active');
+            
+            // Attach event listeners dynamically to all "Review" buttons
+            document.body.addEventListener('click', (e) => {
+                const reviewBtn = e.target.closest('.btn-review');
+                if (reviewBtn) {
+                    document.getElementById('modalName').innerText = reviewBtn.dataset.name;
+                    document.getElementById('modalAvatar').src = reviewBtn.dataset.avatar;
+                    toggleModal();
+                }
+            });
+
+            if (btnClose) btnClose.addEventListener('click', toggleModal);
+            if (btnCancel) btnCancel.addEventListener('click', toggleModal);
+            modal.addEventListener('click', (e) => { if(e.target === modal) toggleModal(); });
+        });
+    </script>
+</body>
+</html>

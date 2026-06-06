@@ -1,0 +1,29 @@
+/* =========================================
+   Button Styles
+   ========================================= */
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #2361a3 0%, #2f81d5 100%); /* Blue gradient based on design */
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}

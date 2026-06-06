@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Client Profile</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../../css/global.css">
+    <link rel="stylesheet" href="../../../css/client-profile.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="profile-header-info">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Sarah Johnson">
+                    <div class="header-title">
+                        <h1>Sarah Johnson</h1>
+                        <p>Cognitive Behavioral Therapy • Session 4 of 12</p>
+                        <span class="status-badge">Active Client</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-secondary" onclick="window.location.href='../../../clients.html'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        Back to Clients
+                    </button>
+                </div>
+            </header>
+
+            <!-- Custom Tab Navigation -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-target="tab-details">Client Details</button>
+                <button class="tab-btn" data-target="tab-notes">Session Notes</button>
+            </div>
+
+            <!-- Tab 1: Client Details -->
+            <div id="tab-details" class="tab-panel active">
+                <div class="info-card">
+                    <h3 class="card-title">Personal Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Full Name</label>
+                            <p>Sarah Johnson</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Date of Birth</label>
+                            <p>May 14, 1990 (33 y/o)</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Email Address</label>
+                            <p>sarah.j@example.com</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Phone Number</label>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3 class="card-title">Clinical History & Goals</h3>
+                    <div class="info-grid" style="grid-template-columns: 1fr;">
+                        <div class="info-item">
+                            <label>Primary Diagnosis / Focus</label>
+                            <p>Generalized Anxiety Disorder (GAD) with a focus on workplace-induced panic attacks.</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Current Treatment Plan</label>
+                            <p>12-week Cognitive Behavioral Therapy (CBT) focusing on identifying triggers, reframing core beliefs, and practicing somatic grounding techniques.</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Medications</label>
+                            <p>None reported currently.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Session Notes -->
+            <div id="tab-notes" class="tab-panel">
+                <div class="info-card">
+                    <h3 class="card-title">Recent Clinical Notes</h3>
+                    
+                    <div class="note-item">
+                        <div class="note-header">
+                            <h4>Session 3: Cognitive Reframing</h4>
+                            <span class="note-date">Oct 17, 2023</span>
+                        </div>
+                        <p class="note-content">S: Sarah reports feeling slightly less overwhelmed since implementing the 4-7-8 breathing technique, though she still experiences significant anxiety spikes prior to team meetings.
+O: Patient was punctual, properly groomed, and engaged actively throughout the session. Eye contact was consistent. Mood appeared slightly anxious but stable.
+A: Generalized Anxiety Symptoms appear to be improving slightly with new coping mechanisms, though specific situational triggers remain potent.
+P: Continue practicing 4-7-8 breathing. Assigned "Core Beliefs Matrix" worksheet to begin unearthing the root of the workplace performance anxiety. Follow up scheduled for next week.</p>
+                    </div>
+                    
+                    <div class="note-item">
+                        <div class="note-header">
+                            <h4>Session 2: Trigger Identification</h4>
+                            <span class="note-date">Oct 10, 2023</span>
+                        </div>
+                        <p class="note-content">S: Patient describes feeling "paralyzed" during unexpected check-ins from her manager.
+O: Alert and oriented. Speech was slightly pressured when discussing work environments.
+A: Clear correlation between lack of control/predictability and onset of panic symptoms.
+P: Educated patient on physiological anxiety responses. Taught 4-7-8 breathing technique. Tasked with logging 3 instances of anxiety onset before the next session.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('../../../Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                // Dynamically adjust root paths since this file is 3 levels deep
+                const adjustedData = data.replace(/href="\.\//g, 'href="../../../').replace(/src="\.\//g, 'src="../../../');
+                document.getElementById('sidebar-container').outerHTML = adjustedData;
+                
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the third item (My Clients)
+                    navItems[2].classList.add('active');
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            });
+
+        // Tab Switching Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.tab-panel');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.target).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Risk & Safety</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mascot {
+      width: 40px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .mascot img {
+      width: 32px;
+      height: auto;
+    }
+
+    /* 4-Step Segmented Stepper */
+    .stepper-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    .stepper-row .step {
+      flex: 1;
+      height: 5px;
+      background: #e2e8f0;
+      border-radius: 3px;
+    }
+
+    .stepper-row .step.active {
+      background: #2563eb;
+    }
+
+    /* Main Form Layout */
+    .form-section {
+      flex: 1;
+      padding: 16px 24px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideFadeUp 0.5s ease-out forwards;
+      background: #ffffff;
+      z-index: 2;
+      overflow-y: auto;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #000000;
+      margin-bottom: 8px;
+      margin-top: 8px;
+    }
+
+    .page-description {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: #e0e7ff; 
+      border: 1px solid #3b82f6; 
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-box-icon {
+      color: #2563eb;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .info-box-content h4 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    .info-box-content p {
+      margin: 0;
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    /* Question Typography */
+    .question-block {
+      margin-bottom: 20px;
+    }
+
+    .question-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 16px;
+    }
+
+    /* Binary Button Group */
+    .binary-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .binary-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+    }
+
+    .binary-btn.selected {
+      border: 2px solid #2563eb;
+      color: #2563eb;
+      padding: 11px; /* Offset for thicker border */
+      background: rgba(37, 99, 235, 0.04);
+    }
+
+    /* Fades out the non-selected option */
+    .binary-group.has-selection .binary-btn:not(.selected) {
+      opacity: 0.4;
+    }
+
+    /* Success Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      width: 80%;
+      max-width: 320px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: slideFadeUp 0.3s ease forwards;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+  
+</head>
+<body>
+
+  <div class="mobile-app-container medical-container">
+    
+    <!-- Shared Global Fixed Header -->
+    <div class="top-section" style="padding-top: 40px; padding-bottom: 25px;">
+      <div class="header-row">
+        <div class="back-btn" onclick="window.history.back()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </div>
+        <h1 class="header-title">Medical Profile</h1>
+        <div class="mascot">
+          <img src="../../src/heali-cropped.png" alt="Heali Mascot">
+        </div>
+      </div>
+
+      <!-- 4-Step Custom Stepper -->
+      <div class="stepper-row">
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step active"></div>
+      </div>
+    </div>
+
+    <!-- Form Area -->
+    <div class="form-section">
+      
+      <h2 class="page-title">Risk & Safety</h2>
+      <p class="page-description">To provide you with the best care, we need to ask some sensitive questions about your safety. This information is kept confidential between you and your healthcare team.</p>
+
+      <div class="info-box">
+        <div class="info-box-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#2563eb" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10" stroke="#ffffff" fill="none" stroke-width="2"></polyline>
+          </svg>
+        </div>
+        <div class="info-box-content">
+          <h4>Confidentiality Commitment</h4>
+          <p>Your responses are encrypted and only accessible to your medical provider to ensure a safe treatment plan.</p>
+        </div>
+      </div>
+
+      <!-- Question 1 -->
+      <div class="question-block">
+        <div class="question-title">Have you had thoughts of harming yourself?</div>
+        <div class="binary-group">
+          <div class="binary-btn yes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="8 12 11 15 16 9"></polyline>
+            </svg>
+            Yes
+          </div>
+          <div class="binary-btn no">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            No
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question-block">
+        <div class="question-title">Any History of self-harm?</div>
+        <div class="binary-group">
+          <div class="binary-btn yes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="8 12 11 15 16 9"></polyline>
+            </svg>
+            Yes
+          </div>
+          <div class="binary-btn no">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            No
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question-block">
+        <div class="question-title">Thoughts of harming others?</div>
+        <div class="binary-group">
+          <div class="binary-btn yes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="8 12 11 15 16 9"></polyline>
+            </svg>
+            Yes
+          </div>
+          <div class="binary-btn no">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            No
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Button -->
+      <div style="margin-top: 16px; margin-bottom: 24px;">
+        <button class="btn-primary" onclick="completeProfile()">
+          Save & Next
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Success Modal Overlay -->
+  <div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: #0f172a;">Profile Saved!</h3>
+      <p style="margin: 0; font-size: 14px; color: #64748b; line-height: 1.5;">Your medical profile has been successfully updated.</p>
+    </div>
+  </div>
+
+  <script>
+    // Yes/No Selection Logic
+    document.querySelectorAll('.binary-group').forEach(group => {
+      const btns = group.querySelectorAll('.binary-btn');
+      btns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          btns.forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          group.classList.add('has-selection');
+        });
+      });
+    });
+
+    // Submit and Show Success Modal
+    function completeProfile() {
+      const modal = document.getElementById('successModal');
+      modal.style.display = 'flex';
+      
+      setTimeout(() => {
+        window.location.href = '../../home.html'; // Assuming index.html is the home page
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

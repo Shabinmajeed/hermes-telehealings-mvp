@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Discover</title>
+  <link rel="stylesheet" href="./css/global.css">
+  <style>
+    /* Animation Keyframes */
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Screen Container */
+    .discover-container {
+      background-color: #fbfcfd;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Content Wrapper */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 10px 20px 120px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* Header Top Row */
+    .header-top {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+    }
+
+    .header-top h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-top p {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4b6380;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Search Bar */
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px 18px;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 8px 25px rgba(30, 90, 184, 0.08);
+      margin-bottom: 0px;
+      margin-top: 10px;
+    }
+
+    .search-container svg {
+      color: #387bd5;
+      margin-right: 12px;
+    }
+
+    .search-container input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      color: #1a293b;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-container input::placeholder {
+      color: #64748b;
+    }
+
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      flex-shrink: 0;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin: 0 -20px 16px -20px;
+      padding: 15px 20px;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-tab {
+      background: #e2effb;
+      color: #4b6380;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cat-tab.active {
+      background: #1e5ab8;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(30, 90, 184, 0.3);
+    }
+
+    /* Featured Hero Card */
+    .featured-card {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      height: 160px;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      animation: slideFadeUp 0.5s ease-out forwards;
+      cursor: pointer;
+    }
+
+    .featured-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 100%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .featured-badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 12px;
+      align-self: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .featured-title {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .featured-meta {
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Sections */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+      animation: slideFadeUp 0.5s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a293b;
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 10px;
+    }
+
+    .section-header a {
+      font-size: 13px;
+      font-weight: 600;
+      color: #387bd5;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Quick Tools Grid */
+    .tools-row {
+      display: flex;
+      flex-shrink: 0;
+      gap: 12px;
+      margin-bottom: 30px;
+      animation: slideFadeUp 0.5s ease-out 0.3s forwards;
+      opacity: 0;
+    }
+
+    .tool-box {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .tool-box:active {
+      transform: scale(0.95);
+    }
+
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      background: #f4f8fd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1e5ab8;
+    }
+
+    .tool-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Content Carousel Row */
+    .content-row {
+      display: flex;
+      flex-shrink: 0;
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin: 0 -20px 30px -20px;
+      padding: 0 20px;
+      animation: slideFadeUp 0.5s ease-out 0.4s forwards;
+      opacity: 0;
+    }
+
+    .content-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .content-card {
+      flex: 0 0 160px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .content-img-box {
+      width: 100%;
+      height: 110px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .content-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Video Play Overlay */
+    .play-icon-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .play-icon-overlay svg {
+      color: #fff;
+      fill: #fff;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .content-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a293b;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .content-card-meta {
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Trending Topics */
+    .trending-tags {
+      display: flex;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+      animation: slideFadeUp 0.5s ease-out 0.5s forwards;
+      opacity: 0;
+    }
+
+    .trending-tag {
+      background: #ffffff;
+      color: #4b6380;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    /* Vertical List */
+    .vertical-list {
+      display: flex;
+      flex-shrink: 0;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 0;
+      animation: slideFadeUp 0.5s ease-out 0.6s forwards;
+      opacity: 0;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      border: 1px solid #f1f5f9;
+      cursor: pointer;
+    }
+
+    .list-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .list-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .list-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a293b;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-meta {
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+  <link rel="stylesheet" href="./css/overrides.css">
+</head>
+<body>
+
+  <div class="mobile-app-container discover-container">
+    
+    <!-- Fixed Sticky Header -->
+    <div class="fixed-header">
+      <div class="header-top">
+        <h1>Discover</h1>
+        <p>Explore tools, articles, and exercises.</p>
+      </div>
+    </div>
+
+    <!-- Main Scrollable Content -->
+    <div class="content-wrapper">
+      
+      <!-- Search Bar -->
+      <div class="search-container">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Search for content...">
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <div class="cat-tab active">All</div>
+        <div class="cat-tab">Articles</div>
+        <div class="cat-tab">Audio</div>
+        <div class="cat-tab">Videos</div>
+        <div class="cat-tab">Exercises</div>
+      </div>
+
+      <!-- Featured Content -->
+      <div class="featured-card">
+        <img class="featured-img" src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80" alt="Featured">
+        <div class="featured-overlay">
+          <span class="featured-badge">Featured Audio</span>
+          <h3 class="featured-title">Guided Meditation for Deep Sleep</h3>
+          <div class="featured-meta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            15 min listen
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Tools Section -->
+      <div class="section-header">
+        <h2>Quick Tools</h2>
+      </div>
+      <div class="tools-row">
+        <div class="tool-box">
+          <div class="tool-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <span class="tool-label">Breathe</span>
+        </div>
+        <div class="tool-box">
+          <div class="tool-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </div>
+          <span class="tool-label">Journal</span>
+        </div>
+        <div class="tool-box">
+          <div class="tool-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <span class="tool-label">Tracker</span>
+        </div>
+      </div>
+
+      <!-- Recommended Reads Section -->
+      <div class="section-header">
+        <h2>Recommended Reads</h2>
+        <a href="#">See all</a>
+      </div>
+      <div class="content-row">
+        <!-- Article 1 -->
+        <div class="content-card">
+          <div class="content-img-box">
+            <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=400&q=80" alt="Article">
+          </div>
+          <h4 class="content-card-title">Understanding Your Anxiety Triggers</h4>
+          <span class="content-card-meta">Article • 5 min read</span>
+        </div>
+        <!-- Article 2 -->
+        <div class="content-card">
+          <div class="content-img-box">
+            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80" alt="Article">
+          </div>
+          <h4 class="content-card-title">The Science Behind Mindfulness</h4>
+          <span class="content-card-meta">Article • 7 min read</span>
+        </div>
+        <!-- Video 1 -->
+        <div class="content-card">
+          <div class="content-img-box">
+            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80" alt="Video">
+            <div class="play-icon-overlay">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+          </div>
+          <h4 class="content-card-title">Yoga for Desk Workers</h4>
+          <span class="content-card-meta">Video • 12 min</span>
+        </div>
+      </div>
+
+      <!-- Trending Topics -->
+      <div class="section-header">
+        <h2>Trending Topics</h2>
+      </div>
+      <div class="trending-tags">
+        <span class="trending-tag">#SleepHygiene</span>
+        <span class="trending-tag">#AnxietyRelief</span>
+        <span class="trending-tag">#Focus</span>
+        <span class="trending-tag">#SelfCare</span>
+        <span class="trending-tag">#Relationships</span>
+      </div>
+
+      <!-- New Arrivals (Vertical List) -->
+      <div class="section-header">
+        <h2>New Arrivals</h2>
+        <a href="#">See all</a>
+      </div>
+      <div class="vertical-list">
+        <div class="list-item">
+          <img class="list-img" src="https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?auto=format&fit=crop&w=200&q=80" alt="Podcast">
+          <div class="list-text">
+            <div class="list-title">The Art of Letting Go</div>
+            <div class="list-meta">Podcast • 25 min</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <img class="list-img" src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=200&q=80" alt="Article">
+          <div class="list-text">
+            <div class="list-title">5 Ways to Ground Yourself</div>
+            <div class="list-meta">Article • 4 min read</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation Placeholder -->
+    <div id="bottom-nav-placeholder"></div>
+
+  </div>
+
+  <!-- Inject Bottom Navigation Script -->
+  <script src="./js/bottom-nav.js"></script>
+  
+  <!-- Inject Heali Chat Script -->
+  <script src="./js/heali-chat.js"></script>
+
+  <script>
+    // Simple Tab Switching Logic
+    const tabs = document.querySelectorAll('.cat-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        tabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

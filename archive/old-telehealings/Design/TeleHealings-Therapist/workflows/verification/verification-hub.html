@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Verification & Resume Builder</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../css/global.css">
+    
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: var(--viewport-height, 100vh);
+            background-color: #e5e5e5;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .verification-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        .v-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .v-header-left h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.5px;
+        }
+        .v-header-left p {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+        }
+        .v-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2a73d4;
+        }
+        .progress-bar-bg {
+            width: 120px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            width: 25%;
+            height: 100%;
+            background: #2a73d4;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .v-header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .v-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .v-close-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* --- Body Layout --- */
+        .v-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar Tabs --- */
+        .v-sidebar {
+            width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+        .v-tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .v-tab:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .v-tab.active {
+            background: #e2effb;
+            color: #2a73d4;
+        }
+        .v-tab svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* --- Content Area --- */
+        .v-content {
+            flex: 1;
+            padding: 32px 40px;
+            overflow-y: auto;
+            background: #ffffff;
+        }
+        .v-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .v-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .panel {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+        .panel.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+        }
+        .panel > p {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0 0 16px 0;
+        }
+
+        /* --- Form Elements --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-family: inherit;
+            font-size: 14px;
+            color: #0f172a;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #2a73d4;
+            background: #ffffff;
+        }
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* File Upload Zone */
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .upload-zone:hover {
+            border-color: #2a73d4;
+            background: #eff6ff;
+        }
+        .upload-icon {
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .upload-text {
+            font-size: 13px;
+            color: #475569;
+            margin: 0 0 4px 0;
+        }
+        .upload-text span { color: #2a73d4; font-weight: 600; }
+        .upload-sub { font-size: 11px; color: #94a3b8; margin: 0; }
+
+        /* Actions */
+        .panel-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 24px;
+            border-top: 1px solid #f1f5f9;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary {
+            background: #2a73d4;
+            color: #ffffff;
+        }
+        .btn-primary:hover { background: #2361b5; }
+        .btn-outline {
+            background: #ffffff;
+            color: #2a73d4;
+            border: 1px solid #2a73d4;
+            margin-top: 10px;
+        }
+        .btn-outline:hover { background: #f1f5f9; }
+
+        /* Dynamic Form Blocks */
+        .dynamic-block {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            background: #f8fafc;
+        }
+        .dynamic-block .remove-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Scrollable Ethics Box */
+        .ethics-box {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #cbd5e1;
+            padding: 16px;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #334155;
+        }
+
+        /* Pill Selector */
+        .pill-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-top: 4px;
+        }
+        .pill {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .pill:hover { background: #e2effb; border-color: #93c5fd; }
+        .pill.selected { background: #2a73d4; color: #ffffff; border-color: #2a73d4; }
+    </style>
+</head>
+<body>
+
+    <div class="verification-container">
+        
+        <!-- Header -->
+        <div class="v-header">
+            <div class="v-header-left">
+                <h1>Profile & Verification Hub</h1>
+                <p>Complete your professional resume to get verified.</p>
+            </div>
+            <div class="v-header-right">
+                <div class="v-progress">
+                    <span>25% Complete</span>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                </div>
+                <button class="v-close-btn" onclick="window.location.href='../../profile.html'" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="v-body">
+            <!-- Sidebar Navigation -->
+            <div class="v-sidebar">
+                <button class="v-tab active" data-target="panel-identity">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Identity & Basic
+                </button>
+                <button class="v-tab" data-target="panel-education">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    Qualifications
+                </button>
+                <button class="v-tab" data-target="panel-clinical">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Clinical Resume
+                </button>
+                <button class="v-tab" data-target="panel-admin">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    Consents & Ethics
+                </button>
+            </div>
+
+            <!-- Content Panels -->
+            <div class="v-content">
+                
+                <!-- Panel 1: Identity -->
+                <div class="panel active" id="panel-identity">
+                    <h2>Identity & Basic Verification</h2>
+                    <p>Provide your legal identity documents for background checks.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-input" placeholder="e.g. Jane">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-input" placeholder="e.g. Doe">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-input">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Government-Issued ID (Aadhaar / Passport / License)</label>
+                            <div class="upload-zone">
+                                <svg class="upload-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                <p class="upload-text"><span>Click to upload</span> or drag and drop</p>
+                                <p class="upload-sub">PDF, JPG, or PNG (Max. 5MB)</p>
+                            </div>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Recent Professional Photograph</label>
+                            <div class="upload-zone">
+                                <svg class="upload-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                <p class="upload-text"><span>Upload Photo</span></p>
+                                <p class="upload-sub">Square aspect ratio preferred</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="switchTab('panel-education', 1)">Save & Continue</button>
+                    </div>
+                </div>
+
+                <!-- Panel 2: Qualifications -->
+                <div class="panel" id="panel-education">
+                    <h2>Educational Qualifications & Licenses</h2>
+                    <p>Detail your academic background and professional registrations.</p>
+                    
+                    <div id="education-container">
+                        <!-- Primary Education Block -->
+                        <div class="dynamic-block">
+                            <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">Education Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Degree Type</label>
+                                    <select class="form-select">
+                                        <option>Degree</option>
+                                        <option>Post Graduate</option>
+                                        <option>Certification</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" class="form-input" placeholder="e.g. Clinical Psychology">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Year Completed</label>
+                                    <input type="number" class="form-input" placeholder="e.g. 2020">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Upload Certificate</label>
+                                    <input type="file" class="form-input" style="padding: 9px 14px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" onclick="addEducation()">+ Add Another Education</button>
+
+                    <div id="license-container" style="margin-top: 32px;">
+                        <!-- Primary License Block -->
+                        <div class="dynamic-block">
+                            <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">License Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">License Type</label>
+                                    <select class="form-select">
+                                        <option>RCI Registration (India)</option>
+                                        <option>Medical Council Registration</option>
+                                        <option>Counsellor Council of India</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">License Number</label>
+                                    <input type="text" class="form-input" placeholder="e.g. CRR No. 12345">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Validity (if applicable)</label>
+                                    <input type="date" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Upload License</label>
+                                    <input type="file" class="form-input" style="padding: 9px 14px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" onclick="addLicense()">+ Add Another License</button>
+
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="switchTab('panel-clinical', 2)">Save & Continue</button>
+                    </div>
+                </div>
+
+                <!-- Panel 3: Clinical Resume -->
+                <div class="panel" id="panel-clinical">
+                    <h2>Clinical Profile & Resume</h2>
+                    <p>Build your platform resume to match with the right clients.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label class="form-label">Years of Experience</label>
+                            <input type="number" class="form-input" placeholder="e.g. 5">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Areas of Specialization</label>
+                            <div class="pill-selector">
+                                <div class="pill" onclick="togglePill(this)">Trauma</div>
+                                <div class="pill" onclick="togglePill(this)">Couples Therapy</div>
+                                <div class="pill" onclick="togglePill(this)">Addiction</div>
+                                <div class="pill" onclick="togglePill(this)">Depression</div>
+                                <div class="pill" onclick="togglePill(this)">Anxiety</div>
+                                <div class="pill" onclick="togglePill(this)">Child Psychology</div>
+                                <div class="pill" onclick="togglePill(this)">Eating Disorders</div>
+                                <div class="pill" onclick="togglePill(this)">Grief</div>
+                            </div>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Types of Clients Worked With</label>
+                            <div class="pill-selector">
+                                <div class="pill" onclick="togglePill(this)">Adults</div>
+                                <div class="pill" onclick="togglePill(this)">Adolescents</div>
+                                <div class="pill" onclick="togglePill(this)">Couples</div>
+                                <div class="pill" onclick="togglePill(this)">Families</div>
+                                <div class="pill" onclick="togglePill(this)">Children</div>
+                                <div class="pill" onclick="togglePill(this)">Groups</div>
+                            </div>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Upload CV / Resume</label>
+                            <div class="upload-zone">
+                                <svg class="upload-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                <p class="upload-text"><span>Upload Updated CV</span></p>
+                                <p class="upload-sub">PDF preferred</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="switchTab('panel-admin', 3)">Save & Continue</button>
+                    </div>
+                </div>
+
+                <!-- Panel 4: Consents -->
+                <div class="panel" id="panel-admin">
+                    <h2>Consents & Ethics Agreement</h2>
+                    <p>Please review and agree to the Telehealings platform ethics policy.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label class="form-label">Code of Ethics</label>
+                            <div class="ethics-box">
+                                <p><strong>1. Confidentiality:</strong> Therapists must maintain patient confidentiality and protect privacy in all communications, ensuring strict adherence to HIPAA and relevant local guidelines.</p>
+                                <p><strong>2. Professional Boundaries:</strong> Therapists must not engage in dual relationships or inappropriate conduct with any patients assigned through the platform.</p>
+                                <p><strong>3. Competence & Care:</strong> Practitioners agree to only provide services within their specialized areas of expertise, maintaining high standards of care.</p>
+                                <p><strong>4. Emergency Protocols:</strong> In the event of a severe clinical emergency, therapists are obligated to guide the client to local emergency services.</p>
+                                <p><strong>5. Platform Conduct:</strong> All communications, scheduling, and billing must remain within the Telehealings application to ensure transparency and proper logging.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full">
+                            <label class="form-label">Confidentiality Agreement</label>
+                            <div class="ethics-box">
+                                <p><strong>1. Client Privacy:</strong> I agree to hold all information shared by clients in strict confidence, both during and after the termination of the therapeutic relationship.</p>
+                                <p><strong>2. Data Protection:</strong> I will ensure that all digital and physical records are stored securely and in compliance with applicable data protection laws (e.g., HIPAA or local equivalents).</p>
+                                <p><strong>3. Platform Usage:</strong> I understand that session notes and communications within the Telehealings platform are encrypted and must not be exported or shared via unauthorized third-party channels.</p>
+                                <p><strong>4. Exceptions:</strong> I am aware of the legal and ethical exceptions to confidentiality, including imminent risk of harm to the client or others, and mandatory reporting laws regarding abuse.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full">
+                            <label class="form-label">Digital Signature</label>
+                            <div style="border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff; position: relative;">
+                                <canvas id="signature-pad" style="width: 100%; height: 160px; display: block; touch-action: none; cursor: crosshair;"></canvas>
+                                <button type="button" onclick="clearSignature()" style="position: absolute; top: 10px; right: 10px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; color: #475569;">Clear</button>
+                            </div>
+                            <small style="color: #64748b; font-size: 11px; margin-top: 4px;">Sign using your mouse, trackpad, or finger.</small>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="alert('Profile submitted successfully! Telehealings admin will review your application.')">Submit Application</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching & Progress Bar Logic
+        const tabs = document.querySelectorAll('.v-tab');
+        const panels = document.querySelectorAll('.panel');
+        const progressFill = document.querySelector('.progress-bar-fill');
+        const progressText = document.querySelector('.v-progress span');
+
+        function switchTab(targetId, index) {
+            // Update Active Tab
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            
+            const targetTab = Array.from(tabs).find(t => t.dataset.target === targetId);
+            if(targetTab) targetTab.classList.add('active');
+            
+            document.getElementById(targetId).classList.add('active');
+
+            // Update Progress Bar
+            const percentages = ['25%', '50%', '75%', '100%'];
+            progressFill.style.width = percentages[index];
+            progressText.innerText = percentages[index] + ' Complete';
+        }
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.target, index);
+            });
+        });
+
+        // ------------------------------------
+        // Dynamic Form Blocks Logic
+        // ------------------------------------
+        function addEducation() {
+            const container = document.getElementById('education-container');
+            const block = document.createElement('div');
+            block.className = 'dynamic-block';
+            block.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">Additional Education</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Degree Type</label>
+                        <select class="form-select">
+                            <option>Degree</option>
+                            <option>Post Graduate</option>
+                            <option>Certification</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Field of Study</label>
+                        <input type="text" class="form-input" placeholder="e.g. Clinical Psychology">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year Completed</label>
+                        <input type="number" class="form-input" placeholder="e.g. 2020">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Certificate</label>
+                        <input type="file" class="form-input" style="padding: 9px 14px;">
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+        }
+
+        function addLicense() {
+            const container = document.getElementById('license-container');
+            const block = document.createElement('div');
+            block.className = 'dynamic-block';
+            block.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">Additional License</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">License Type</label>
+                        <select class="form-select">
+                            <option>RCI Registration (India)</option>
+                            <option>Medical Council Registration</option>
+                            <option>Counsellor Council of India</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Number</label>
+                        <input type="text" class="form-input" placeholder="e.g. CRR No. 12345">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Validity</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload License</label>
+                        <input type="file" class="form-input" style="padding: 9px 14px;">
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+        }
+
+        // ------------------------------------
+        // Selectable Pills Logic
+        // ------------------------------------
+        function togglePill(pillElement) {
+            pillElement.classList.toggle('selected');
+        }
+
+        // ------------------------------------
+        // Signature Pad Canvas Logic
+        // ------------------------------------
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Resize canvas correctly for high DPI and CSS scaling
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 160;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0f172a';
+        }
+        window.addEventListener('resize', resizeCanvas);
+        setTimeout(resizeCanvas, 100);
+
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const { x, y } = getCoordinates(e);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const { x, y } = getCoordinates(e);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            e.preventDefault();
+        }
+
+        function stopDrawing() { isDrawing = false; }
+        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch Events for Mobile/Tablets
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+    </script>
+</body>
+</html>             </div>
+                </div>
+
+                <!-- Panel 3: Clinical Resume -->
+                <div class="panel" id="panel-clinical">
+                    <h2>Clinical Profile & Resume</h2>
+                    <p>Build your platform resume to match with the right clients.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                        <div class="form-group full">
+                            <label class="form-label">Years of Experience</label>
+                            <input type="number" class="form-input" placeholder="e.g. 5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Language Proficiency</label>
+                            <input type="text" class="form-input" placeholder="e.g. English, Hindi, Spanish">
+                            <label class="form-label">Areas of Specialization</label>
+                            <select class="form-select" multiple size="5" style="height: auto; min-height: 110px;">
+                                <option>Trauma</option>
+                                <option>Couples Therapy</option>
+                                <option>Addiction</option>
+                                <option>Depression</option>
+                                <option>Anxiety</option>
+                                <option>Child Psychology</option>
+                            </select>
+                            <small style="color: #64748b; font-size: 11px;">Hold Cmd/Ctrl to select multiple</small>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Therapeutic Approach</label>
+                            <select class="form-select">
+                                <option>Cognitive Behavioral Therapy (CBT)</option>
+                                <option>Psychodynamic</option>
+                                <option>Integrative</option>
+                                <option>Humanistic</option>
+                                <option>EMDR</option>
+                        <div class="form-group">
+                            <label class="form-label">Types of Clients Worked With</label>
+                            <select class="form-select" multiple size="5" style="height: auto; min-height: 110px;">
+                                <option>Adults</option>
+                                <option>Adolescents</option>
+                                <option>Couples</option>
+                                <option>Families</option>
+                                <option>Children</option>
+                            </select>
+                            <small style="color: #64748b; font-size: 11px;">Hold Cmd/Ctrl to select multiple</small>
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Upload CV / Resume</label>
+                            <div class="upload-zone">
+                                <svg class="upload-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                <p class="upload-text"><span>Upload Updated CV</span></p>
+                                <p class="upload-sub">PDF preferred</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="switchTab('panel-admin', 3)">Save & Continue</button>
+                    </div>
+                </div>
+
+                <!-- Panel 4: Admin & Platform -->
+                <!-- Panel 4: Consents -->
+                <div class="panel" id="panel-admin">
+                    <h2>Admin & Platform Details</h2>
+                    <p>Finalize your payouts and public-facing profile.</p>
+                    <h2>Consents & Ethics Agreement</h2>
+                    <p>Please review and agree to the Telehealings platform ethics policy.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Bank Account Number</label>
+                            <input type="text" class="form-input" placeholder="For Payouts">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">IFSC / Routing Code</label>
+                            <input type="text" class="form-input" placeholder="Bank Branch Code">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Maximum Caseload Capacity</label>
+                            <input type="number" class="form-input" placeholder="e.g. 15 sessions per week">
+                            <label class="form-label">Code of Ethics</label>
+                            <div class="ethics-box">
+                                <p><strong>1. Confidentiality:</strong> Therapists must maintain patient confidentiality and protect privacy in all communications, ensuring strict adherence to HIPAA and relevant local guidelines.</p>
+                                <p><strong>2. Professional Boundaries:</strong> Therapists must not engage in dual relationships or inappropriate conduct with any patients assigned through the platform.</p>
+                                <p><strong>3. Competence & Care:</strong> Practitioners agree to only provide services within their specialized areas of expertise, maintaining high standards of care.</p>
+                                <p><strong>4. Emergency Protocols:</strong> In the event of a severe clinical emergency, therapists are obligated to guide the client to local emergency services.</p>
+                                <p><strong>5. Platform Conduct:</strong> All communications, scheduling, and billing must remain within the Telehealings application to ensure transparency and proper logging.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full">
+                            <label class="form-label">Client-Friendly Profile Bio</label>
+                            <textarea class="form-textarea" placeholder="Write a short, welcoming bio that clients will read on your profile..."></textarea>
+                            <label class="form-label">Digital Signature</label>
+                            <div style="border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff; position: relative;">
+                                <canvas id="signature-pad" style="width: 100%; height: 160px; display: block; touch-action: none; cursor: crosshair;"></canvas>
+                                <button type="button" onclick="clearSignature()" style="position: absolute; top: 10px; right: 10px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; color: #475569;">Clear</button>
+                            </div>
+                            <small style="color: #64748b; font-size: 11px; margin-top: 4px;">Sign using your mouse, trackpad, or finger.</small>
+                        </div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="alert('Profile submitted successfully! Telehealings admin will review your application.')">Submit Application for Review</button>
+                        <button class="btn btn-primary" onclick="alert('Profile submitted successfully! Telehealings admin will review your application.')">Submit Application</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching & Progress Bar Logic
+        const tabs = document.querySelectorAll('.v-tab');
+        const panels = document.querySelectorAll('.panel');
+        const progressFill = document.querySelector('.progress-bar-fill');
+        const progressText = document.querySelector('.v-progress span');
+
+        function switchTab(targetId, index) {
+            // Update Active Tab
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            
+            const targetTab = Array.from(tabs).find(t => t.dataset.target === targetId);
+            if(targetTab) targetTab.classList.add('active');
+            
+            document.getElementById(targetId).classList.add('active');
+
+            // Update Progress Bar
+            const percentages = ['25%', '50%', '75%', '100%'];
+            progressFill.style.width = percentages[index];
+            progressText.innerText = percentages[index] + ' Complete';
+        }
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.target, index);
+            });
+        });
+
+        // ------------------------------------
+        // Dynamic Form Blocks Logic
+        // ------------------------------------
+        function addEducation() {
+            const container = document.getElementById('education-container');
+            const block = document.createElement('div');
+            block.className = 'dynamic-block';
+            block.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">Additional Education</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Degree Type</label>
+                        <select class="form-select">
+                            <option>Degree</option>
+                            <option>Post Graduate</option>
+                            <option>Certification</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Field of Study</label>
+                        <input type="text" class="form-input" placeholder="e.g. Clinical Psychology">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year Completed</label>
+                        <input type="number" class="form-input" placeholder="e.g. 2020">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Certificate</label>
+                        <input type="file" class="form-input" style="padding: 9px 14px;">
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+        }
+
+        function addLicense() {
+            const container = document.getElementById('license-container');
+            const block = document.createElement('div');
+            block.className = 'dynamic-block';
+            block.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
+                <h3 style="font-size: 15px; margin: 0 0 16px 0; color: #0f172a;">Additional License</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">License Type</label>
+                        <select class="form-select">
+                            <option>RCI Registration (India)</option>
+                            <option>Medical Council Registration</option>
+                            <option>Counsellor Council of India</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Number</label>
+                        <input type="text" class="form-input" placeholder="e.g. CRR No. 12345">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Validity</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload License</label>
+                        <input type="file" class="form-input" style="padding: 9px 14px;">
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+        }
+
+        // ------------------------------------
+        // Selectable Pills Logic
+        // ------------------------------------
+        function togglePill(pillElement) {
+            pillElement.classList.toggle('selected');
+        }
+
+        // ------------------------------------
+        // Signature Pad Canvas Logic
+        // ------------------------------------
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Resize canvas correctly for high DPI and CSS scaling
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 160;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0f172a';
+        }
+        window.addEventListener('resize', resizeCanvas);
+        setTimeout(resizeCanvas, 100);
+
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const { x, y } = getCoordinates(e);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const { x, y } = getCoordinates(e);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            e.preventDefault();
+        }
+
+        function stopDrawing() { isDrawing = false; }
+        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch Events for Mobile/Tablets
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+    </script>
+</body>
+</html>

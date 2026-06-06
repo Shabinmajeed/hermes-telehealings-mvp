@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Booking Summary</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <style>
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .summary-container {
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .content-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 24px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideFadeUp 0.4s ease-out forwards;
+    }
+    
+    .content-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Custom Header Adjustment */
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .back-btn {
+      cursor: pointer;
+      color: #0f172a;
+      margin-top: 4px;
+    }
+
+    .header-titles {
+      flex: 1;
+    }
+
+    .header-titles h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #000000;
+      margin: 0 0 6px 0;
+    }
+
+    .header-titles p {
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    /* Therapist Card */
+    .therapist-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    .therapist-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .therapist-details {
+      flex: 1;
+    }
+
+    .therapist-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .therapist-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .therapist-spec {
+      font-size: 14px;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    /* Section Blocks */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .session-type {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .session-desc {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Date & Time Grid */
+    .datetime-grid {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .dt-col {
+      flex: 1;
+    }
+
+    .dt-divider {
+      width: 1px;
+      height: 40px;
+      background: #e2e8f0;
+      margin: 0 16px;
+    }
+
+    .dt-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .dt-sub {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* Cancellation Policy Box */
+    .policy-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 32px;
+    }
+
+    .policy-icon {
+      color: #64748b;
+      flex-shrink: 0;
+    }
+
+    .policy-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .policy-desc {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Payment Summary */
+    .payment-summary {
+      margin-bottom: 32px;
+    }
+
+    .payment-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #000000;
+      margin-bottom: 20px;
+    }
+
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #475569;
+    }
+
+    .payment-row.promo {
+      color: #64748b;
+    }
+
+    .payment-row.promo .val {
+      color: #0f172a;
+    }
+
+    .promo-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 24px;
+    }
+
+    .total-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    .total-val-box {
+      text-align: right;
+    }
+
+    .total-val {
+      font-size: 28px;
+      font-weight: 800;
+      color: #000000;
+    }
+
+    .tax-inc {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* Proceed Button */
+    .proceed-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .proceed-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+  <link rel="stylesheet" href="../../css/overrides.css">
+</head>
+<body>
+
+  <div class="mobile-app-container summary-container">
+    
+    <!-- Shared Global Fixed Header -->
+    <div class="fixed-header">
+      <div class="header-top">
+        <div class="back-btn" onclick="window.history.back()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </div>
+        <div class="header-titles">
+          <h1>Booking Summary</h1>
+          <p>Please review the details of your upcoming session.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+      
+      <!-- Therapist Details -->
+      <div class="therapist-card">
+        <img src="../../src/therapist-2.jpg" alt="Dr. Smitha S" class="therapist-img">
+        <div class="therapist-details">
+          <div class="therapist-label">Therapist</div>
+          <div class="therapist-name">Dr. Smitha.S</div>
+          <div class="therapist-spec">Clinical Psychologist</div>
+        </div>
+      </div>
+
+      <!-- Session Details -->
+      <div class="section-label">Session Type</div>
+      <div class="session-type">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+        Video Consultation
+      </div>
+      <div class="session-desc">50-minute therapeutic session via secure video link</div>
+
+      <!-- Date & Time -->
+      <div class="section-label">Date and Time</div>
+      <div class="datetime-grid">
+        <div class="dt-col">
+          <div class="dt-val">Thursday, Oct 24, 2024</div>
+          <div class="dt-sub">Date of appointment</div>
+        </div>
+        <div class="dt-divider"></div>
+        <div class="dt-col">
+          <div class="dt-val">02:00 PM — 03:00 PM</div>
+          <div class="dt-sub">Eastern Standard Time (EST)</div>
+        </div>
+      </div>
+
+      <!-- Cancellation Policy -->
+      <div class="policy-box">
+        <div class="policy-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </div>
+        <div>
+          <div class="policy-title">Cancellation Policy</div>
+          <div class="policy-desc">Free up to 24 hours before the session. 50% fee within 24 hours.</div>
+        </div>
+      </div>
+
+      <!-- Payment Breakdown -->
+      <div class="payment-summary">
+        <h2 class="payment-title">Payment Summary</h2>
+        
+        <div class="payment-row">
+          <span>Session Fee</span>
+          <span class="val">₹ 1250</span>
+        </div>
+        
+        <div class="payment-row">
+          <span>Platform Fee</span>
+          <span class="val">₹ 250</span>
+        </div>
+        
+        <div class="payment-row promo">
+          <span class="promo-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            Promo Code (HEAL20)
+          </span>
+          <span class="val">-₹ 00</span>
+        </div>
+
+        <div class="total-row">
+          <span class="total-label">Total Cost</span>
+          <div class="total-val-box">
+            <div class="total-val">₹ 1500</div>
+            <div class="tax-inc">(Tax Included)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button class="proceed-btn" onclick="openPaymentModal()">
+        Proceed to Payment
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Inject Payment Modal Workflow -->
+  <script src="payment.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "hermes-telehealings-mvp",
+  "version": "1.0.0",
+  "description": "TeleHealings MVP - Complete Telehealth Platform (Backend + Mobile + Web Apps)",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/mobile",
+    "packages/therapist-web",
+    "packages/admin-web"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "start": "npm run start --workspaces",
+    "start:backend": "npm start --workspace=packages/backend",
+    "start:mobile": "npm start --workspace=packages/mobile",
+    "start:therapist": "npm start --workspace=packages/therapist-web",
+    "start:admin": "npm start --workspace=packages/admin-web",
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces",
+    "lint": "npm run lint --workspaces"
+  },
+  "keywords": [
+    "telehealth",
+    "therapy",
+    "healthcare",
+    "react-native",
+    "nestjs",
+    "react"
+  ],
+  "author": "Shabin Majeed",
+  "license": "MIT"
+}

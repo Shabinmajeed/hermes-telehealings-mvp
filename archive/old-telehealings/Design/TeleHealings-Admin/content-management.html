@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Content Management</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        /* --- Base Layout --- */
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; overflow: hidden; background: transparent; }
+
+        .app-shell {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar-container { flex-shrink: 0; }
+
+        .page-shell {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            background: transparent;
+        }
+
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 12px;
+            padding-bottom: 0;
+        }
+
+        .header-tab {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            padding: 0 0 12px 0;
+            position: relative;
+        }
+
+        .header-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 3px;
+            background: #0f172a;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .header-mascot {
+            height: 48px;
+            margin-bottom: -1px;
+        }
+
+        /* --- Toolbar --- */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-count {
+            font-size: 16px;
+            color: #475569;
+        }
+
+        .user-count strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .search-wrap {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #64748b;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: 99px;
+            border: 1px solid #cbd5e1;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .btn-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-pill svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-outline {
+            border: 1px solid #0f172a;
+            background: transparent;
+            color: #0f172a;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            border: 1px solid #2563eb;
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* --- Table Card --- */
+        .table-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 32px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .clients-table th {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .clients-table th svg {
+            width: 14px; height: 14px;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        .clients-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        .clients-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Content Cell Styling */
+        .content-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .content-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .content-thumb svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .content-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-title {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .sub-text {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* User Info Column */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        /* --- Clinical Tags --- */
+        .content-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .content-tag {
+            background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+            font-size: 11px; padding: 2px 6px; border-radius: 4px;
+            font-weight: 600; white-space: nowrap;
+        }
+
+        /* --- Content Metrics --- */
+        .content-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .metric-item svg { width: 12px; height: 12px; }
+        .metric-item strong { color: #0f172a; }
+        .metric-item.star svg { color: #f59e0b; fill: #f59e0b; }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-published { background: #dcfce7; color: #166534; }
+        .status-draft { background: #fef9c3; color: #854d0e; }
+        .status-archived { background: #f1f5f9; color: #475569; }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn:hover { background: #f1f5f9; }
+
+        /* --- Pagination --- */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+        }
+
+        .pagination-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .pagination-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: none;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover { background: #e2e8f0; }
+        .page-btn.active { background: #2563eb; color: #ffffff; }
+        .page-btn svg { width: 16px; height: 16px; }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav { display: flex; gap: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .tab-btn { background: transparent; border: none; padding: 10px 4px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; position: relative; transition: color 0.2s; }
+        .tab-btn:hover { color: #0f172a; }
+        .tab-btn.active { color: #2563eb; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #2563eb; border-radius: 2px 2px 0 0; }
+
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Sidebar Navigation (Injected) -->
+        <div class="sidebar-container" id="sidebar-container"></div>
+
+        <div class="page-shell">
+            <div class="content-wrapper">
+
+                <!-- Header -->
+                <header class="page-header">
+                    <div class="header-tab">Content Management</div>
+                    <img src="src/Heali-peak.png" class="header-mascot" alt="Mascot">
+                </header>
+
+                <!-- Tabs Navigation (Library Spaces) -->
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-filter="All">All Library</button>
+                    <button class="tab-btn" data-filter="Article">Articles</button>
+                    <button class="tab-btn" data-filter="Video">Video Tutorials</button>
+                    <button class="tab-btn" data-filter="Audio">Audio Tracks</button>
+                    <button class="tab-btn" data-filter="Interactive">Interactive / Breathing</button>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <div class="user-count"><strong>All Content</strong> 128</div>
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="search-input" placeholder="Search content...">
+                        </div>
+                        <button class="btn-pill btn-outline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            Filters
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn-pill btn-primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Content
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div class="table-card">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%">Sl No</th>
+                                <th style="width: 26%">Content Title</th>
+                                <th style="width: 10%">Category</th>
+                                <th style="width: 16%">Clinical Tags</th>
+                                <th style="width: 15%">Author</th>
+                                <th style="width: 15%">Performance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></th>
+                                <th style="width: 8%">Status</th>
+                                <th style="width: 5%; text-align:center;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="contentTableBody">
+                            <!-- Rows generated via JS -->
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <div class="pagination-info">SHOWING 1 OF 13 PAGES</div>
+                        <div class="pagination-nav">
+                            <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SVG Icons for different content types
+        const icons = {
+            "Article": `<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>`,
+            "Video": `<polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>`,
+            "Audio": `<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>`,
+            "Interactive": `<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line>`
+        };
+
+        // Table Data Injection
+        const contentData = [
+            { id: "C-101", title: "Understanding Anxiety: A Complete Guide", snippet: "Learn the basics of anxiety and how to manage daily triggers.", type: "Article", tags: ["#Anxiety", "#CBT"], author: { name: "Dr. Sarah Smith", avatar: "https://i.pravatar.cc/150?u=sarah" }, metrics: { views: "4.2K", completion: "78%", rating: "4.8" }, date: "24/04/2026", status: "Published" },
+            { id: "C-102", title: "Guided Meditation for Deep Sleep", snippet: "A 15-minute audio track to help you fall asleep faster.", type: "Audio", tags: ["#SleepDisorder", "#Relaxation"], author: { name: "Dr. Ajesh Anand", avatar: "https://i.pravatar.cc/150?u=ajesh" }, metrics: { views: "12.5K", completion: "92%", rating: "4.9" }, date: "23/04/2026", status: "Published" },
+            { id: "C-103", title: "5 Tips for Better Relationships", snippet: "Video guide on active listening and communication.", type: "Video", tags: ["#CouplesTherapy"], author: { name: "Dr. Emily Chen", avatar: "https://i.pravatar.cc/150?u=emily" }, metrics: { views: "-", completion: "-", rating: "-" }, date: "22/04/2026", status: "Draft" },
+            { id: "C-104", title: "Box Breathing Exercise Tool", snippet: "Interactive 4-4-4-4 breathing pacing tool.", type: "Interactive", tags: ["#PanicAttacks", "#Mindfulness"], author: { name: "Dr. David Kim", avatar: "https://i.pravatar.cc/150?u=david" }, metrics: { views: "8.1K", completion: "65%", rating: "4.5" }, date: "20/04/2026", status: "Published" },
+            { id: "C-105", title: "Managing Workplace Stress", snippet: "Practical tips to handle burnout and boundaries.", type: "Article", tags: ["#Burnout", "#Stress"], author: { name: "Dr. Marcus Reed", avatar: "https://i.pravatar.cc/150?u=marcus" }, metrics: { views: "2.3K", completion: "45%", rating: "4.1" }, date: "18/04/2026", status: "Archived" },
+            { id: "C-106", title: "Morning Yoga Routine", snippet: "A quick 10-minute stretch to start your day.", type: "Video", tags: ["#PhysicalWellness"], author: { name: "Dr. Sophia Patel", avatar: "https://i.pravatar.cc/150?u=sophia" }, metrics: { views: "18.4K", completion: "88%", rating: "4.9" }, date: "15/04/2026", status: "Published" }
+        ];
+
+        function renderContent(filter = 'All') {
+            const tbody = document.getElementById('contentTableBody');
+            tbody.innerHTML = '';
+            
+            const filteredData = contentData.filter(item => {
+                if (filter === 'All') return true;
+                return item.type === filter;
+            });
+            
+            const getTagsHtml = (tags) => tags ? tags.map(tag => `<span class="content-tag">${tag}</span>`).join('') : '';
+
+            filteredData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color:#64748b;">${item.id}</td>
+                    <td>
+                        <div class="content-cell">
+                            <div class="content-thumb">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${icons[item.type]}</svg>
+                            </div>
+                            <div class="content-details">
+                                <span class="content-title" title="${item.title}">${item.title}</span>
+                                <span class="sub-text">${item.snippet}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span style="font-weight: 500; color: #475569;">${item.type}</span></td>
+                    <td><div class="content-tags">${getTagsHtml(item.tags)}</div></td>
+                    <td>
+                        <div class="user-cell">
+                            <img src="${item.author.avatar}" class="avatar" alt="${item.author.name}">
+                            <span class="user-name">${item.author.name}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="content-metrics">
+                            <div class="metric-item" title="Views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> <strong>${item.metrics.views}</strong></div>
+                            <div class="metric-item" title="Completion Rate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <strong>${item.metrics.completion}</strong></div>
+                            <div class="metric-item star" title="Average Rating"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> <strong>${item.metrics.rating}</strong></div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${item.status.toLowerCase()}">${item.status}</span>
+                    </td>
+                    <td style="text-align:center;">
+                        <button class="action-btn">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        renderContent();
+
+        // Sidebar Injection Logic
+        function initializeSidebarToggle() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                });
+            }
+        }
+
+        async function injectSidebar() {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+            try {
+                const response = await fetch('./components/side-bar.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                const styleElement = doc.querySelector('style');
+                if (styleElement) {
+                    document.head.appendChild(styleElement.cloneNode(true));
+                }
+
+                const bodyChildren = Array.from(doc.body.childNodes);
+                bodyChildren.forEach(node => {
+                    if (node.nodeName.toLowerCase() === 'script') return;
+                    container.appendChild(node.cloneNode(true));
+                });
+
+                // Correct image paths
+                const images = container.querySelectorAll('img');
+                images.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && src.startsWith('../src/')) {
+                        img.setAttribute('src', src.replace('../src/', 'src/'));
+                    }
+                });
+
+                initializeSidebarToggle();
+                
+                // Automatically highlight the "Content Management" nav item
+                setTimeout(() => {
+                    const navItems = container.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    const contentNav = Array.from(navItems).find(item => item.getAttribute('href').includes('content-management.html'));
+                    if(contentNav) contentNav.classList.add('active');
+                }, 50);
+
+            } catch (error) {
+                container.innerHTML = '<div style="padding: 24px; color: #b91c1c;">Failed to load sidebar component.</div>';
+                console.error('Sidebar injection failed:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', injectSidebar);
+
+        // Setup Tab Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderContent(btn.dataset.filter);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

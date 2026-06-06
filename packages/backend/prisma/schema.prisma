@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model
+model User {
+  id                String    @id @default(cuid())
+  email             String?   @unique
+  phone             String?   @unique
+  passwordHash      String?   // For email/password auth
+  phoneVerified     Boolean   @default(false)
+  emailVerified     Boolean   @default(false)
+  suspended         Boolean   @default(false)
+
+  // Relationships
+  onboardings       Onboarding[]
+  profile           UserProfile?
+  authTokens        AuthToken[]
+  favorites         Favorite[]
+
+  // Metadata
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([suspended])
+}
+
+// User Profile
+model UserProfile {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name      String?
+  bio       String?
+  avatar    String?
+  theme     String    @default("light")
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  @@index([userId])
+}
+
+// OTP for phone verification
+model OTP {
+  id        String    @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  
+  createdAt DateTime  @default(now())
+  
+  @@index([phone])
+  @@index([expiresAt])
+}
+
+// Auth Tokens for refresh token management
+model AuthToken {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  refreshToken String    @unique
+  expiresAt    DateTime
+  
+  createdAt    DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Therapist model
+model Therapist {
+  id              String    @id @default(cuid())
+  name            String
+  email           String?   @unique
+  bio             String?
+  avatar          String?
+
+  specializations String[]  @default([])
+  languages       String[]  @default([])
+  hourlyRate      Float
+
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+
+  verified        Boolean   @default(false)
+  verifiedAt      DateTime?
+
+  // Relationships
+  availability    TherapistAvailability[]
+  favorites       Favorite[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([verified])
+  @@index([specializations])
+  @@index([email])
+}
+
+// Therapist Availability Slots
+model TherapistAvailability {
+  id              String    @id @default(cuid())
+  therapistId     String
+  therapist       Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek       Int       // 0-6 (Sunday-Saturday)
+  startTime       String    // HH:mm format
+  endTime         String    // HH:mm format
+  slotDuration    Int       @default(60) // in minutes
+  bufferTime      Int       @default(15) // in minutes
+  
+  isActive        Boolean   @default(true)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([therapistId])
+  @@index([dayOfWeek])
+}
+
+// User favorites (for therapists)
+model Favorite {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  therapistId   String
+  therapist     Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  createdAt     DateTime  @default(now())
+  
+  @@unique([userId, therapistId])
+  @@index([userId])
+  @@index([therapistId])
+}
+
+// Onboarding progress tracking
+model Onboarding {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  userName          String?
+  focusAreas        String[]  @default([])
+  termsAccepted     Boolean   @default(false)
+  privacyAccepted   Boolean   @default(false)
+  onboardingComplete Boolean   @default(false)
+  
+  // Session/step tracking
+  currentStep       String    @default("marketing") // marketing, soft-onboarding, personalisation
+  
+  // Metadata
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  completedAt       DateTime?
+  
+  @@index([userId])
+  @@index([onboardingComplete])
+}
+
+// Admin user
+model Admin {
+  id        String    @id @default(cuid())
+  username  String    @unique
+  password  String    // Hashed
+  email     String?   @unique
+  
+  // Metadata
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  lastLogin DateTime?
+  
+  @@index([username])
+}
+
+// Audit log for tracking actions
+model AuditLog {
+  id        String    @id @default(cuid())
+  action    String    // e.g., "USER_CREATED", "ONBOARDING_COMPLETED"
+  userId    String?   // Nullable for system actions
+  adminId   String?   // Nullable for user actions
+  details   Json?
+  
+  createdAt DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([adminId])
+  @@index([createdAt])
+}

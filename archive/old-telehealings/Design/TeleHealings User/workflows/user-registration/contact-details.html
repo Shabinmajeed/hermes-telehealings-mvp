@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Contact Information</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main Form Layout */
+    .form-section {
+      flex: 1;
+      padding: 0 24px 40px 24px;
+      margin-top: 0px;
+      display: flex;
+      flex-direction: column;
+      animation: slideFadeUp 0.5s ease-out forwards;
+      background: #ffffff;
+      z-index: 2;
+      overflow-y: auto;
+    }
+
+    /* Info Banner */
+    .info-banner {
+      background: #f0fdfa; /* Soft teal background matching design */
+      border: 1px solid #ccfbf1;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .info-icon {
+      width: 22px;
+      height: 22px;
+      background: #115e59;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 13px;
+      font-family: serif;
+      margin-top: 2px;
+    }
+
+    .info-text {
+      font-size: 13px;
+      color: #0f172a;
+      line-height: 1.5;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: #3b82f6;
+    }
+
+    .section-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Floating Label Inputs */
+    .input-group {
+      position: relative;
+      margin-top: 8px;
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      background: #ffffff;
+      padding: 0 4px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #64748b;
+      z-index: 1;
+    }
+
+    .custom-input {
+      width: 100%;
+      height: 56px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a293b;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .custom-input::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .custom-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    .custom-input.with-icon {
+      padding-right: 48px;
+    }
+
+    .verify-badge {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #1d4ed8;
+      display: flex;
+    }
+
+    select.custom-input {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    /* Standardize placeholder text color for Selects */
+    select.custom-input:invalid {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+    
+    select.custom-input option {
+      color: #1a293b;
+      font-weight: 500;
+    }
+  </style>
+ 
+</head>
+<body>
+  <div class="mobile-app-container contact-container">
+    
+    <!-- Shared Global Fixed Header -->
+    <div class="top-section">
+      <div class="back-btn" onclick="window.location.href='./profile-completion.html'">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </div>
+      <h1 class="header-title">Contact Information</h1>
+      <p class="header-subtitle">Please provide your contact info.</p>
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="step"></div>
+        <div class="step active"></div>
+      </div>
+    </div>
+
+    <!-- Form Area -->
+    <div class="form-section">
+      
+      <!-- Using the exact dummy content displayed in the reference image mockup -->
+      <div class="input-group">
+        <label class="input-label">Phone Number *</label>
+        <input type="text" class="custom-input with-icon" value="+91 1234566799" readonly>
+        <div class="verify-badge">
+          <!-- Verified shield icon SVG matching the image -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <path d="M12 2l3.09 2.26L19 5l-.54 3.76L21 12l-2.54 3.24L19 19l-3.91.74L12 22l-3.09-2.26L5 19l.54-3.76L3 12l2.54-3.24L5 5l3.91-.74L12 2zm-1.18 13.06L17 8.84l-1.42-1.42-4.76 4.76-2.12-2.12L7.28 11.48l3.54 3.58z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Email Address *</label>
+        <input type="text" class="custom-input with-icon" value="alex.rivera@example.com" readonly>
+        <div class="verify-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <path d="M12 2l3.09 2.26L19 5l-.54 3.76L21 12l-2.54 3.24L19 19l-3.91.74L12 22l-3.09-2.26L5 19l.54-3.76L3 12l2.54-3.24L5 5l3.91-.74L12 2zm-1.18 13.06L17 8.84l-1.42-1.42-4.76 4.76-2.12-2.12L7.28 11.48l3.54 3.58z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Physical Address *</label>
+        <input type="text" class="custom-input" placeholder="Enter physical address">
+      </div>
+
+      <!-- Info Banner -->
+      <div class="info-banner">
+        <div class="info-icon">i</div>
+        <div class="info-text">
+          Your emergency contact will only be notified during critical security or medical emergencies. All data is securely encrypted and protected.
+        </div>
+      </div>
+
+      <!-- Section 2: Emergency Contact -->
+      <div class="section-header" style="margin-top: 16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="10" r="3"></circle>
+          <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"></path>
+          <!-- Added pulse signal rings above the pin to match image -->
+          <path d="M12 2a10 10 0 0 1 10 10" stroke-dasharray="2 4" stroke-opacity="0.3"/>
+          <path d="M12 5a7 7 0 0 1 7 7" stroke-dasharray="2 2" stroke-opacity="0.5"/>
+        </svg>
+        <h2>Emergency Contact</h2>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Full Name *</label>
+        <input type="text" class="custom-input" placeholder="Enter emergency contact name">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Phone Number *</label>
+        <input type="tel" class="custom-input" placeholder="Enter phone number">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Relationship *</label>
+        <select class="custom-input" required>
+          <option value="" disabled selected>Select</option>
+          <option value="parent">Parent</option>
+          <option value="spouse">Spouse</option>
+          <option value="sibling">Sibling</option>
+          <option value="friend">Friend</option>
+        </select>
+      </div>
+
+      <!-- Final Save Button -->
+      <div style="margin-top: 16px; margin-bottom: 24px;">
+        <button class="btn-primary" onclick="window.location.href='./profile-success.html'">
+          Save & Complete
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

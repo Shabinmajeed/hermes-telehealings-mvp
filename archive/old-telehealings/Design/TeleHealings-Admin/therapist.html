@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Therapist</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        /* --- Base Layout --- */
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; overflow: hidden; background: transparent; }
+
+        .app-shell {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar-container { flex-shrink: 0; }
+
+        .page-shell {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            background: transparent;
+        }
+
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 12px;
+            padding-bottom: 0;
+        }
+
+        .header-tab {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            padding: 0 0 12px 0;
+            position: relative;
+        }
+
+        .header-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 3px;
+            background: #0f172a;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .header-mascot {
+            height: 48px;
+            margin-bottom: -1px;
+        }
+
+        /* --- Toolbar --- */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-count {
+            font-size: 16px;
+            color: #475569;
+        }
+
+        .user-count strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .search-wrap {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #64748b;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: 99px;
+            border: 1px solid #cbd5e1;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .btn-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-pill svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-outline {
+            border: 1px solid #0f172a;
+            background: transparent;
+            color: #0f172a;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            border: 1px solid #2563eb;
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* --- Table Card --- */
+        .table-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 32px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .clients-table th {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .clients-table th svg {
+            width: 14px; height: 14px;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        .clients-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        .clients-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* User Info Column */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .sub-text {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn:hover { background: #f1f5f9; }
+
+        /* --- Pagination --- */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+        }
+
+        .pagination-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .pagination-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: none;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover { background: #e2e8f0; }
+        .page-btn.active { background: #2563eb; color: #ffffff; }
+        .page-btn svg { width: 16px; height: 16px; }
+
+        /* --- Advanced Filters & Tags --- */
+        .advanced-filters {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            display: none;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .advanced-filters.active { display: flex; }
+        .filter-group { display: flex; flex-direction: column; gap: 8px; }
+        .filter-label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+        .filter-select {
+            padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff;
+            font-size: 13px; color: #334155; outline: none; transition: border 0.2s; font-family: inherit;
+        }
+        .filter-select:focus { border-color: #3b82f6; }
+        
+        .tags-container { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .filter-tag {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+            border-radius: 99px; background: #eff6ff; color: #2563eb; font-size: 13px;
+            font-weight: 600; border: 1px solid #bfdbfe; cursor: pointer; transition: all 0.2s;
+        }
+        .filter-tag svg { width: 14px; height: 14px; }
+        .filter-tag:hover { background: #dbeafe; }
+        .filter-tag-add {
+            background: #ffffff; color: #64748b; border: 1px dashed #cbd5e1;
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+            border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .filter-tag-add:hover { background: #f1f5f9; border-color: #94a3b8; color: #334155; }
+        
+        .query-actions {
+            display: flex;
+            align-items: flex-end;
+            margin-left: auto;
+            gap: 12px;
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-card {
+            background: #ffffff; width: 500px; max-width: 90%;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transform: scale(0.95); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+        .modal-title { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;}
+        .modal-title svg { color: #2563eb; }
+        .modal-close { background: transparent; border: none; cursor: pointer; color: #64748b; padding: 4px; border-radius: 50%; }
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
+        
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 12px; font-weight: 600; color: #475569; }
+        .form-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; font-family: inherit; outline: none; transition: border 0.2s; box-sizing: border-box; background: #ffffff; color: #0f172a; }
+        .form-input:focus { border-color: #2563eb; }
+        .form-row { display: flex; gap: 16px; }
+        .form-row .form-group { flex: 1; }
+
+        .modal-footer { padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px; background: #fafafa; }
+
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Sidebar Navigation (Injected) -->
+        <div class="sidebar-container" id="sidebar-container"></div>
+
+        <div class="page-shell">
+            <div class="content-wrapper">
+
+                <!-- Header -->
+                <header class="page-header">
+                    <div class="header-tab">Therapist</div>
+                    <img src="src/Heali-peak.png" class="header-mascot" alt="Mascot">
+                </header>
+
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <div class="user-count"><strong>All Therapists</strong> 24</div>
+                        <div class="search-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="search-input" placeholder="Search">
+                        </div>
+                        <button class="btn-pill btn-outline" id="btnFilters">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            Filters
+                        </button>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn-pill btn-outline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Export CSV
+                        </button>
+                        <button class="btn-pill btn-primary" id="btnAddTherapist">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Therapist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters & Tags Panel -->
+                <div class="advanced-filters" id="advancedFilters">
+                    <div class="filter-group">
+                        <span class="filter-label">Specialization</span>
+                        <select class="filter-select">
+                            <option>All Specializations</option>
+                            <option>Clinical Psychologist</option>
+                            <option>Behavioral Therapist</option>
+                            <option>Psychiatrist</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Capacity Status</span>
+                        <select class="filter-select">
+                            <option>All Capacities</option>
+                            <option>Available</option>
+                            <option>Full Capacity</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="flex: 1;">
+                        <span class="filter-label">Granular Tags</span>
+                        <div class="tags-container">
+                            <span class="filter-tag">Top Rated <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                            <span class="filter-tag">Couples Therapy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                            <button class="filter-tag-add">+ Add Tag</button>
+                        </div>
+                    </div>
+                    <div class="query-actions">
+                        <button class="btn-pill btn-outline" style="padding: 8px 16px; font-size: 13px;" id="clearFiltersBtn">Clear</button>
+                        <button class="btn-pill btn-primary" style="padding: 8px 16px; font-size: 13px;">Apply Query</button>
+                    </div>
+                </div>
+
+                <!-- Table Card -->
+                <div class="table-card">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%">Sl No</th>
+                                <th style="width: 25%">Therapist Name</th>
+                                <th style="width: 15%">Specialization</th>
+                                <th style="width: 18%">Contact Number</th>
+                                <th style="width: 15%">Last Active <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></th>
+                                <th style="width: 18%">Status</th>
+                                <th style="width: 4%; text-align:center;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="therapistsTableBody">
+                            <!-- Rows generated via JS -->
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <div class="pagination-info">SHOWING 1 OF 3 PAGES</div>
+                        <div class="pagination-nav">
+                            <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Therapist Modal -->
+    <div class="modal-overlay" id="addTherapistModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    Register New Therapist
+                </div>
+                <button class="modal-close" id="closeTherapistModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" placeholder="e.g. Sarah"></div>
+                    <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" placeholder="e.g. Smith"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" placeholder="dr.smith@example.com"></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Contact Number</label><input type="tel" class="form-input" placeholder="+1 (555) 000-0000"></div>
+                    <div class="form-group"><label class="form-label">Years of Experience</label><input type="number" class="form-input" placeholder="e.g. 5"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specialization</label>
+                    <select class="form-input">
+                        <option>Clinical Psychologist</option><option>Behavioral Therapist</option><option>Psychiatrist</option>
+                        <option>Marriage Counselor</option><option>Child Psychologist</option><option>Addiction Counselor</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-pill btn-outline" id="cancelTherapistBtn">Cancel</button>
+                <button class="btn-pill btn-primary">Onboard Therapist</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Change Status Modal -->
+    <div class="modal-overlay" id="statusTherapistModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Update Operational Status
+                </div>
+                <button class="modal-close" id="closeStatusTherapistModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: #475569; margin: 0 0 10px 0;">Modify system privileges and matching logic for <strong id="statusTherapistName" style="color: #0f172a;">Therapist Name</strong>.</p>
+                <div class="form-group">
+                    <label class="form-label">System Status</label>
+                    <select class="form-input">
+                        <option>Available (Active)</option><option>Full Capacity</option><option>On Leave</option><option>Operational Probation</option><option style="color: #dc2626; font-weight: 600;">Suspended</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-pill btn-outline" id="cancelStatusTherapistBtn">Cancel</button>
+                <button class="btn-pill btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Table Data Injection
+        const therapistsData = [
+            { id: 1, name: "Dr. Ajesh Anand", email: "ajeshanand@telehealings.com", specialization: "Clinical Psychologist", phone: "+971 501234567", lastActiveDate: "22/04/2026", lastActiveTime: "11:10 Am", status: "Available", patientsCount: "15 Active", avatar: "https://i.pravatar.cc/150?u=ajesh" },
+            { id: 2, name: "Dr. Sarah Smith", email: "sarahsmith@telehealings.com", specialization: "Behavioral Therapist", phone: "+971 502345678", lastActiveDate: "22/04/2026", lastActiveTime: "10:45 Am", status: "Full Capacity", patientsCount: "25 Active", avatar: "https://i.pravatar.cc/150?u=sarah" },
+            { id: 3, name: "Dr. Ethan Hunt", email: "ethanhunt@telehealings.com", specialization: "Psychiatrist", phone: "+971 503456789", lastActiveDate: "21/04/2026", lastActiveTime: "04:30 Pm", status: "On Leave", patientsCount: "0 Active", avatar: "https://i.pravatar.cc/150?u=ethan" },
+            { id: 4, name: "Dr. Emily Chen", email: "emilychen@telehealings.com", specialization: "Marriage Counselor", phone: "+971 504567890", lastActiveDate: "22/04/2026", lastActiveTime: "09:15 Am", status: "Available", patientsCount: "8 Active", avatar: "https://i.pravatar.cc/150?u=emily" },
+            { id: 5, name: "Dr. Marcus Reed", email: "marcuseed@telehealings.com", specialization: "Child Psychologist", phone: "+971 505678901", lastActiveDate: "22/04/2026", lastActiveTime: "11:00 Am", status: "Available", patientsCount: "12 Active", avatar: "https://i.pravatar.cc/150?u=marcus" },
+            { id: 6, name: "Dr. Olivia Wilde", email: "oliviawilde@telehealings.com", specialization: "Clinical Psychologist", phone: "+971 506789012", lastActiveDate: "22/04/2026", lastActiveTime: "08:50 Am", status: "Full Capacity", patientsCount: "20 Active", avatar: "https://i.pravatar.cc/150?u=olivia" },
+            { id: 7, name: "Dr. David Kim", email: "davidkim@telehealings.com", specialization: "Addiction Counselor", phone: "+971 507890123", lastActiveDate: "20/04/2026", lastActiveTime: "02:10 Pm", status: "Available", patientsCount: "5 Active", avatar: "https://i.pravatar.cc/150?u=david" },
+            { id: 8, name: "Dr. Sophia Patel", email: "sophiapatel@telehealings.com", specialization: "Behavioral Therapist", phone: "+971 508901234", lastActiveDate: "22/04/2026", lastActiveTime: "11:05 Am", status: "Available", patientsCount: "14 Active", avatar: "https://i.pravatar.cc/150?u=sophia" }
+        ];
+
+        const tbody = document.getElementById('therapistsTableBody');
+        therapistsData.forEach(therapist => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="color:#64748b;">${therapist.id}</td>
+                <td>
+                    <div class="user-cell">
+                        <img src="${therapist.avatar}" class="avatar" alt="${therapist.name}">
+                        <div class="user-details">
+                            <span class="user-name">${therapist.name}</span>
+                            <span class="user-email">${therapist.email}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>${therapist.specialization}</td>
+                <td>${therapist.phone}</td>
+                <td>
+                    ${therapist.lastActiveDate}
+                    <span class="sub-text">${therapist.lastActiveTime}</span>
+                </td>
+                <td>
+                    ${therapist.status}
+                    ${therapist.patientsCount ? `<span class="sub-text">${therapist.patientsCount}</span>` : ''}
+                </td>
+                <td style="text-align:center;">
+                    <button class="action-btn btn-change-status" title="Change Status" data-name="${therapist.name}">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Sidebar Injection Logic
+        function initializeSidebarToggle() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                });
+            }
+        }
+
+        async function injectSidebar() {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+            try {
+                const response = await fetch('./components/side-bar.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                const styleElement = doc.querySelector('style');
+                if (styleElement) {
+                    document.head.appendChild(styleElement.cloneNode(true));
+                }
+
+                const bodyChildren = Array.from(doc.body.childNodes);
+                bodyChildren.forEach(node => {
+                    if (node.nodeName.toLowerCase() === 'script') return;
+                    container.appendChild(node.cloneNode(true));
+                });
+
+                // Correct image paths
+                const images = container.querySelectorAll('img');
+                images.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && src.startsWith('../src/')) {
+                        img.setAttribute('src', src.replace('../src/', 'src/'));
+                    }
+                });
+
+                initializeSidebarToggle();
+                
+                // Automatically highlight the "Therapist" nav item
+                setTimeout(() => {
+                    const navItems = container.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    const therapistNav = Array.from(navItems).find(item => item.getAttribute('href').includes('therapist.html'));
+                    if(therapistNav) therapistNav.classList.add('active');
+                }, 50);
+
+            } catch (error) {
+                container.innerHTML = '<div style="padding: 24px; color: #b91c1c;">Failed to load sidebar component.</div>';
+                console.error('Sidebar injection failed:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', injectSidebar);
+        
+        // Filter Panel Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnFilters = document.getElementById('btnFilters');
+            const advancedFilters = document.getElementById('advancedFilters');
+            
+            if (btnFilters && advancedFilters) {
+                btnFilters.addEventListener('click', () => {
+                    advancedFilters.classList.toggle('active');
+                });
+            }
+            
+            // Add Therapist Modal Logic
+            const addModal = document.getElementById('addTherapistModal');
+            const btnAdd = document.getElementById('btnAddTherapist');
+            const btnClose = document.getElementById('closeTherapistModal');
+            const btnCancel = document.getElementById('cancelTherapistBtn');
+            
+            const toggleAddModal = () => addModal.classList.toggle('active');
+            if (btnAdd) btnAdd.addEventListener('click', toggleAddModal);
+            if (btnClose) btnClose.addEventListener('click', toggleAddModal);
+            if (btnCancel) btnCancel.addEventListener('click', toggleAddModal);
+            if (addModal) addModal.addEventListener('click', (e) => { if(e.target === addModal) toggleAddModal(); });
+            
+            // Status Modal Logic
+            const statusModal = document.getElementById('statusTherapistModal');
+            const closeStatusModal = document.getElementById('closeStatusTherapistModal');
+            const cancelStatusBtn = document.getElementById('cancelStatusTherapistBtn');
+            
+            const toggleStatusModal = () => statusModal.classList.toggle('active');
+            
+            document.body.addEventListener('click', (e) => {
+                const btn = e.target.closest('.btn-change-status');
+                if (btn) {
+                    document.getElementById('statusTherapistName').innerText = btn.dataset.name;
+                    toggleStatusModal();
+                }
+            });
+            if (closeStatusModal) closeStatusModal.addEventListener('click', toggleStatusModal);
+            if (cancelStatusBtn) cancelStatusBtn.addEventListener('click', toggleStatusModal);
+            if (statusModal) statusModal.addEventListener('click', (e) => { if(e.target === statusModal) toggleStatusModal(); });
+        });
+    </script>
+</body>
+</html>

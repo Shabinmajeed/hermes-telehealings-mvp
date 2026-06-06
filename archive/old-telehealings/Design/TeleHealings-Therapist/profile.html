@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - My Profile</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <style>
+        .profile-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: stretch;
+        }
+        .profile-tabs-header {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            overflow-x: auto;
+        }
+        .profile-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .profile-tab:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        .profile-tab.active {
+            background: #e2effb;
+            color: #2a73d4;
+        }
+        .profile-content {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .profile-panel {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        .profile-panel.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .panel-header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+        .panel-header-desc {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .upload-zone-sm {
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            background: #f8fafc;
+            font-size: 13px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .upload-zone-sm:hover {
+            border-color: #2a73d4;
+            background: #eff6ff;
+        }
+
+        /* Pill Selector */
+        .pill-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-top: 4px;
+        }
+        .pill {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .pill:hover { background: #e2effb; border-color: #93c5fd; }
+        .pill.selected { background: #2a73d4; color: #ffffff; border-color: #2a73d4; }
+        
+        /* Section Titles for Forms */
+        .profile-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 24px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* View Mode Styles */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 20px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .info-item label {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .info-item p {
+            font-size: 15px;
+            color: #0f172a;
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>My Profile</h1>
+                    <p>Manage your personal and professional details.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="window.location.href='./workflows/verification/verification-hub.html'" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; border-radius: 8px; background-color: var(--color-primary, #2a73d4); color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: background-color 0.2s;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                        Verification Hub
+                    </button>
+                </div>
+            </header>
+
+            <div class="profile-layout">
+                <!-- Horizontal Tabs -->
+                <div class="profile-tabs-header">
+                    <button class="profile-tab active" data-target="panel-general">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        General & Identity
+                    </button>
+                    <button class="profile-tab" data-target="panel-qualifications">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                        Qualifications
+                    </button>
+                    <button class="profile-tab" data-target="panel-clinical">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Clinical Resume
+                    </button>
+                    <button class="profile-tab" data-target="panel-admin">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                        Admin & Payouts
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="profile-content">
+                    
+                    <!-- General & Identity -->
+                    <div id="panel-general" class="profile-panel active">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <div class="panel-header-title" style="margin-bottom: 6px;">General & Identity</div>
+                                <div class="panel-header-desc" style="margin-bottom: 0;">Manage your basic personal information and profile picture.</div>
+                            </div>
+                            <button id="edit-general-btn" class="btn-secondary" onclick="toggleEditMode('general')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Edit Profile
+                            </button>
+                        </div>
+                        
+                        <!-- View Mode -->
+                        <div id="general-view-mode">
+                            <!-- Hero Section: Avatar, Name, Bio -->
+                            <div style="display: flex; gap: 24px; align-items: center; margin-bottom: 32px; padding: 24px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                <img src="https://i.pravatar.cc/150?img=11" alt="Profile Picture" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); flex-shrink: 0;">
+                                <div>
+                                    <h2 style="margin: 0 0 6px 0; font-size: 22px; color: #0f172a;">Ajesh Anand</h2>
+                                    <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">Experienced therapist specializing in cognitive behavioral therapy with over 10 years of practice helping individuals overcome anxiety and depression.</p>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-title" style="margin-top: 0;">Contact & Identity</div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Email Address</label>
+                                    <p>ajeshanand@telehealings.com</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Phone Number</label>
+                                    <p>+91 98765 43210</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Date of Birth</label>
+                                    <p>June 15, 1985</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Govt ID (Aadhaar/Passport)</label>
+                                    <p style="color: #2a73d4; cursor: pointer; text-decoration: underline;">ID_Proof.pdf</p>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-title">Professional Summary</div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Years of Experience</label>
+                                    <p>10 Years</p>
+                                </div>
+                                <div class="info-item" style="grid-column: 1 / -1;">
+                                    <label>Areas of Specialization</label>
+                                    <div class="pill-selector">
+                                        <div class="pill selected" style="cursor: default;">Couples Therapy</div>
+                                        <div class="pill selected" style="cursor: default;">Depression</div>
+                                        <div class="pill selected" style="cursor: default;">Anxiety</div>
+                                    </div>
+                                </div>
+                                <div class="info-item" style="grid-column: 1 / -1;">
+                                    <label>Types of Clients Worked With</label>
+                                    <div class="pill-selector">
+                                        <div class="pill selected" style="cursor: default;">Adults</div>
+                                        <div class="pill selected" style="cursor: default;">Couples</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edit Mode -->
+                        <div id="general-edit-mode" style="display: none;">
+                            <div class="profile-avatar-container" style="margin-bottom: 24px;">
+                                <img src="https://i.pravatar.cc/150?img=11" alt="Profile Picture" class="profile-avatar">
+                                <div>
+                                    <button class="btn-upload">Change Picture</button>
+                                    <button class="btn-remove">Remove</button>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-title" style="margin-top: 0;">Basic Intro</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" value="Ajesh">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" value="Anand">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Bio / About Me</label>
+                                    <textarea style="height: 100px;">Experienced therapist specializing in cognitive behavioral therapy with over 10 years of practice helping individuals overcome anxiety and depression.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-title">Contact & Identity</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" value="ajeshanand@telehealings.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" value="+91 98765 43210">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <input type="date" value="1985-06-15">
+                                </div>
+                                <div class="form-group">
+                                    <label>Govt ID (Aadhaar/Passport)</label>
+                                    <div class="upload-zone-sm">Uploaded: ID_Proof.pdf</div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-title">Professional Summary</div>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Years of Experience</label>
+                                    <input type="number" value="10">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Areas of Specialization</label>
+                                    <div class="pill-selector">
+                                        <div class="pill" onclick="togglePill(this)">Trauma</div>
+                                        <div class="pill selected" onclick="togglePill(this)">Couples Therapy</div>
+                                        <div class="pill" onclick="togglePill(this)">Addiction</div>
+                                        <div class="pill selected" onclick="togglePill(this)">Depression</div>
+                                        <div class="pill selected" onclick="togglePill(this)">Anxiety</div>
+                                        <div class="pill" onclick="togglePill(this)">Child Psychology</div>
+                                        <div class="pill" onclick="togglePill(this)">Eating Disorders</div>
+                                        <div class="pill" onclick="togglePill(this)">Grief</div>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Types of Clients Worked With</label>
+                                    <div class="pill-selector">
+                                        <div class="pill selected" onclick="togglePill(this)">Adults</div>
+                                        <div class="pill" onclick="togglePill(this)">Adolescents</div>
+                                        <div class="pill selected" onclick="togglePill(this)">Couples</div>
+                                        <div class="pill" onclick="togglePill(this)">Families</div>
+                                        <div class="pill" onclick="togglePill(this)">Children</div>
+                                        <div class="pill" onclick="togglePill(this)">Groups</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" style="margin-top: 24px; display: flex; gap: 12px;">
+                                <button class="btn-secondary" onclick="toggleEditMode('general')" style="padding: 10px 24px; border-radius: 8px;">Cancel</button>
+                                <button class="btn-primary" onclick="saveProfile('general')">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Qualifications -->
+                    <div id="panel-qualifications" class="profile-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <div class="panel-header-title" style="margin-bottom: 6px;">Educational Qualifications & Licenses</div>
+                                <div class="panel-header-desc" style="margin-bottom: 0;">Update your academic degrees and licensing credentials.</div>
+                            </div>
+                            <button id="edit-qualifications-btn" class="btn-secondary" onclick="toggleEditMode('qualifications')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Edit Credentials
+                            </button>
+                        </div>
+                        
+                        <!-- View Mode -->
+                        <div id="qualifications-view-mode">
+                            <div class="profile-section-title" style="margin-top: 0;">Education Details</div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Degree Type</label>
+                                    <p>Post Graduate</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Field of Study</label>
+                                    <p>Clinical Psychology</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Year Completed</label>
+                                    <p>2013</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Certificate Document</label>
+                                    <p style="color: #2a73d4; cursor: pointer; text-decoration: underline;">Degree_Cert.pdf</p>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-section-title">License Details</div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>License Type</label>
+                                    <p>RCI Registration (India)</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>License Number</label>
+                                    <p>CRR No. 12345</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Validity</label>
+                                    <p>Dec 31, 2028</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>License Document</label>
+                                    <p style="color: #2a73d4; cursor: pointer; text-decoration: underline;">RCI_License.pdf</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Edit Mode -->
+                        <div id="qualifications-edit-mode" style="display: none;">
+                            <div class="profile-section-title" style="margin-top: 0;">Education Details</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Degree Type</label>
+                                    <select>
+                                        <option>Degree</option>
+                                        <option selected>Post Graduate</option>
+                                        <option>Certification</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Field of Study</label>
+                                    <input type="text" value="Clinical Psychology">
+                                </div>
+                                <div class="form-group">
+                                    <label>Year Completed</label>
+                                    <input type="number" value="2013">
+                                </div>
+                                <div class="form-group">
+                                    <label>Upload Certificate</label>
+                                    <div class="upload-zone-sm">Uploaded: Degree_Cert.pdf</div>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-section-title">License Details</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>License Type</label>
+                                    <select>
+                                        <option selected>RCI Registration (India)</option>
+                                        <option>Medical Council Registration</option>
+                                        <option>Counsellor Council of India</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>License Number</label>
+                                    <input type="text" value="CRR No. 12345">
+                                </div>
+                                <div class="form-group">
+                                    <label>Validity</label>
+                                    <input type="date" value="2028-12-31">
+                                </div>
+                                <div class="form-group">
+                                    <label>Upload License</label>
+                                    <div class="upload-zone-sm">Uploaded: RCI_License.pdf</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" style="margin-top: 24px; display: flex; gap: 12px;">
+                                <button class="btn-secondary" onclick="toggleEditMode('qualifications')" style="padding: 10px 24px; border-radius: 8px;">Cancel</button>
+                                <button class="btn-primary" onclick="saveProfile('qualifications')">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clinical Resume -->
+                    <div id="panel-clinical" class="profile-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <div class="panel-header-title" style="margin-bottom: 6px;">Clinical Profile</div>
+                                <div class="panel-header-desc" style="margin-bottom: 0;">Manage your professional resume and other clinical documents.</div>
+                            </div>
+                            <button id="edit-clinical-btn" class="btn-secondary" onclick="toggleEditMode('clinical')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Edit Resume
+                            </button>
+                        </div>
+                        
+                        <!-- View Mode -->
+                        <div id="clinical-view-mode">
+                            <div class="info-grid">
+                                <div class="info-item" style="grid-column: 1 / -1;">
+                                    <label>CV / Resume Document</label>
+                                    <p style="color: #2a73d4; cursor: pointer; text-decoration: underline;">Ajesh_Resume_2023.pdf</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Edit Mode -->
+                        <div id="clinical-edit-mode" style="display: none;">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>CV / Resume</label>
+                                    <div class="upload-zone-sm">Uploaded: Ajesh_Resume_2023.pdf</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" style="margin-top: 24px; display: flex; gap: 12px;">
+                                <button class="btn-secondary" onclick="toggleEditMode('clinical')" style="padding: 10px 24px; border-radius: 8px;">Cancel</button>
+                                <button class="btn-primary" onclick="saveProfile('clinical')">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin & Payouts -->
+                    <div id="panel-admin" class="profile-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                            <div>
+                                <div class="panel-header-title" style="margin-bottom: 6px;">Admin & Payouts</div>
+                                <div class="panel-header-desc" style="margin-bottom: 0;">Manage your bank details and scheduling capacity.</div>
+                            </div>
+                            <button id="edit-admin-btn" class="btn-secondary" onclick="toggleEditMode('admin')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Edit Payouts
+                            </button>
+                        </div>
+                        
+                        <!-- View Mode -->
+                        <div id="admin-view-mode">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Bank Account Number</label>
+                                    <p>XXXXXXXX9876</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>IFSC / Routing Code</label>
+                                    <p>HDFC0001234</p>
+                                </div>
+                                <div class="info-item" style="grid-column: 1 / -1;">
+                                    <label>Maximum Caseload Capacity (Per Week)</label>
+                                    <p>20 Sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Edit Mode -->
+                        <div id="admin-edit-mode" style="display: none;">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Bank Account Number</label>
+                                    <input type="password" value="XXXXXXXX9876">
+                                </div>
+                                <div class="form-group">
+                                    <label>IFSC / Routing Code</label>
+                                    <input type="text" value="HDFC0001234">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Maximum Caseload Capacity (Per Week)</label>
+                                    <input type="number" value="20">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" style="margin-top: 24px; display: flex; gap: 12px;">
+                                <button class="btn-secondary" onclick="toggleEditMode('admin')" style="padding: 10px 24px; border-radius: 8px;">Cancel</button>
+                                <button class="btn-primary" onclick="saveProfile('admin')">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('./Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+                
+                // Remove active highlight since this is a sub-page not in the main sidebar list
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                }, 50);
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+
+        // Profile Tab Switching Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const profilePanels = document.querySelectorAll('.profile-panel');
+
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    profilePanels.forEach(p => p.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.target).classList.add('active');
+                });
+            });
+        });
+
+        // Pill Selector Toggle Logic
+        function togglePill(pillElement) {
+            pillElement.classList.toggle('selected');
+        }
+
+        // Universal Profile View/Edit Toggle Logic
+        function toggleEditMode(section) {
+            const viewMode = document.getElementById(`${section}-view-mode`);
+            const editMode = document.getElementById(`${section}-edit-mode`);
+            const editBtn = document.getElementById(`edit-${section}-btn`);
+            
+            if (viewMode.style.display === 'none') {
+                viewMode.style.display = 'block';
+                editMode.style.display = 'none';
+                if (editBtn) editBtn.style.display = 'inline-flex';
+            } else {
+                viewMode.style.display = 'none';
+                editMode.style.display = 'block';
+                if (editBtn) editBtn.style.display = 'none';
+            }
+        }
+
+        function saveProfile(section) {
+            toggleEditMode(section);
+        }
+    </script>
+</body>
+</html>

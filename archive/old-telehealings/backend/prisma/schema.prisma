@@ -1,0 +1,427 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.io/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// Auth & User Management
+// ============================================
+
+model User {
+  id              String    @id @default(cuid())
+  email           String?   @unique
+  phoneNumber     String?   @unique
+  passwordHash    String?
+  firstName       String?
+  lastName        String?
+  profileImage    String?
+  role            UserRole  @default(USER)
+  status          UserStatus @default(ACTIVE)
+  emailVerified   Boolean   @default(false)
+  phoneVerified   Boolean   @default(false)
+  
+  // Relationships
+  profile         UserProfile?
+  appointments    Appointment[] @relation("UserAppointments")
+  messages        Message[] @relation("UserMessages")
+  reviews         Review[]
+  payments        Payment[]
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastLogin       DateTime?
+
+  @@index([email])
+  @@index([phoneNumber])
+  @@index([role])
+}
+
+model UserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  bio             String?
+  dateOfBirth     DateTime?
+  gender          String?
+  location        String?
+  timezone        String?
+  
+  // Mental health preferences
+  topics          String[]  @default([])  // [anxiety, depression, relationships, etc]
+  
+  // Preferences
+  notificationPreference NotificationPreference @default(ALL)
+  preferredLanguage String @default("en")
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum UserRole {
+  USER
+  THERAPIST
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  DELETED
+}
+
+// ============================================
+// Therapist Management
+// ============================================
+
+model Therapist {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Professional Info
+  licenseNumber   String    @unique
+  licenseType     String    // e.g., LMFT, LCSW, PhD
+  licenseState    String?
+  licenseExpiry   DateTime?
+  licenseVerified Boolean   @default(false)
+  verificationDocument String?  // URL to uploaded document
+  
+  // Profile
+  specializations String[] @default([])
+  languages       String[] @default([])
+  hourlyRate      Float
+  bio             String?
+  experience      Int?      // years of experience
+  
+  // Availability
+  availability    AvailabilitySlot[]
+  
+  // Relationships
+  appointments    Appointment[] @relation("TherapistAppointments")
+  sessionNotes    SessionNote[]
+  
+  // Stats
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  
+  // Status
+  status          TherapistStatus @default(PENDING)
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([licenseNumber])
+}
+
+enum TherapistStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+model AvailabilitySlot {
+  id              String    @id @default(cuid())
+  therapistId     String
+  therapist       Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek       Int       // 0-6 (Sunday-Saturday)
+  startTime       String    // HH:mm format
+  endTime         String    // HH:mm format
+  isBooked        Boolean   @default(false)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([therapistId, dayOfWeek, startTime])
+}
+
+// ============================================
+// Appointments & Sessions
+// ============================================
+
+model Appointment {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation("UserAppointments", fields: [userId], references: [id], onDelete: Cascade)
+  
+  therapistId     String
+  therapist       Therapist @relation("TherapistAppointments", fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  // Session Details
+  sessionType     SessionType @default(VIDEO)
+  startTime       DateTime
+  endTime         DateTime
+  status          AppointmentStatus @default(SCHEDULED)
+  
+  // Session
+  session         Session?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  cancelledAt     DateTime?
+
+  @@index([userId])
+  @@index([therapistId])
+  @@index([startTime])
+  @@index([status])
+}
+
+enum SessionType {
+  VIDEO
+  AUDIO
+  CHAT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Session {
+  id              String    @id @default(cuid())
+  appointmentId   String    @unique
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  
+  // Room/Call
+  roomId          String    @unique
+  
+  // Timestamps
+  startedAt       DateTime?
+  endedAt         DateTime?
+  
+  // Session Notes
+  notes           SessionNote?
+
+  @@index([appointmentId])
+}
+
+model SessionNote {
+  id              String    @id @default(cuid())
+  sessionId       String    @unique
+  session         Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  therapistId     String
+  therapist       Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  content         String
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ============================================
+// Messaging
+// ============================================
+
+model Conversation {
+  id              String    @id @default(cuid())
+  userId          String
+  therapistId     String
+  
+  messages        Message[]
+  
+  lastMessageAt   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([userId, therapistId])
+}
+
+model Message {
+  id              String    @id @default(cuid())
+  conversationId  String
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  senderId        String
+  sender          User      @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  
+  content         String
+  attachments     String[]  @default([])  // URLs
+  
+  isRead          Boolean   @default(false)
+  readAt          DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+// ============================================
+// Payments
+// ============================================
+
+model Payment {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  appointmentId   String?
+  
+  amount          Float
+  currency        String    @default("USD")
+  status          PaymentStatus @default(PENDING)
+  
+  stripePaymentId String?   @unique
+  stripeChargeId  String?   @unique
+  
+  paymentMethod   String?   // card, subscription, etc
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([appointmentId])
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Subscription {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  
+  plan            SubscriptionPlan @default(MONTHLY)
+  status          SubscriptionStatus @default(ACTIVE)
+  
+  stripeSubscriptionId String? @unique
+  
+  startDate       DateTime  @default(now())
+  renewalDate     DateTime
+  cancelledAt     DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  WEEKLY
+  PAY_AS_YOU_GO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+// ============================================
+// Reviews & Ratings
+// ============================================
+
+model Review {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  therapistId     String
+  
+  rating          Int       // 1-5
+  content         String?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([userId, therapistId])
+  @@index([therapistId])
+}
+
+// ============================================
+// Content & Resources
+// ============================================
+
+model Article {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  content         String
+  
+  category        String
+  tags            String[]
+  
+  imageUrl        String?
+  excerpt         String?
+  
+  published       Boolean   @default(false)
+  publishedAt     DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([category])
+  @@index([published])
+}
+
+// ============================================
+// Admin & System
+// ============================================
+
+enum NotificationPreference {
+  ALL
+  IMPORTANT_ONLY
+  NONE
+}
+
+model AdminLog {
+  id              String    @id @default(cuid())
+  adminId         String
+  action          String
+  entity          String
+  entityId        String?
+  changes         String?   // JSON
+  
+  ipAddress       String?
+  userAgent       String?
+  
+  createdAt       DateTime  @default(now())
+
+  @@index([adminId])
+  @@index([createdAt])
+}
+
+model PromoCode {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  discount        Float     // percentage or fixed amount
+  discountType    String    @default("PERCENTAGE")  // PERCENTAGE or FIXED
+  
+  maxUses         Int?
+  currentUses     Int       @default(0)
+  
+  validFrom       DateTime
+  validUntil      DateTime
+  
+  isActive        Boolean   @default(true)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([code])
+  @@index([isActive])
+}
