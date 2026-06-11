@@ -1,0 +1,354 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, "release/**"]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Detect which packages changed ──────────────────────────────
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      mobile: ${{ steps.filter.outputs.mobile }}
+      therapist-web: ${{ steps.filter.outputs.therapist-web }}
+      admin-web: ${{ steps.filter.outputs.admin-web }}
+      backend: ${{ steps.filter.outputs.backend }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            mobile:
+              - 'packages/mobile/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+            therapist-web:
+              - 'packages/web-therapist/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+            admin-web:
+              - 'packages/web-admin/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+            backend:
+              - 'packages/backend/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+            shared:
+              - 'shared/**'
+
+  # ── Mobile (Expo SDK 56) ──────────────────────────────────────
+  mobile-lint:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+        working-directory: packages/mobile
+
+  mobile-test:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx jest --passWithNoTests --ci
+        working-directory: packages/mobile
+
+  mobile-build:
+    needs: [mobile-lint, mobile-test]
+    if: always() && needs.mobile-lint.result != 'failure' && needs.mobile-test.result != 'failure'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx expo export --platform web
+        working-directory: packages/mobile
+
+  # ── Therapist Web (React/Vite) ────────────────────────────────
+  therapist-web-lint:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.therapist-web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-therapist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+        working-directory: packages/web-therapist
+
+  therapist-web-test:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.therapist-web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-therapist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx vitest run --passWithNoTests
+        working-directory: packages/web-therapist
+
+  therapist-web-build:
+    needs: [therapist-web-lint, therapist-web-test]
+    if: always() && needs.therapist-web-lint.result != 'failure' && needs.therapist-web-test.result != 'failure'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-therapist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx vite build
+        working-directory: packages/web-therapist
+
+  # ── Admin Web (React/Vite) ────────────────────────────────────
+  admin-web-lint:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.admin-web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+        working-directory: packages/web-admin
+
+  admin-web-test:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.admin-web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx vitest run --passWithNoTests
+        working-directory: packages/web-admin
+
+  admin-web-build:
+    needs: [admin-web-lint, admin-web-test]
+    if: always() && needs.admin-web-lint.result != 'failure' && needs.admin-web-test.result != 'failure'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web-admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx vite build
+        working-directory: packages/web-admin
+
+  # ── Backend (NestJS/Prisma) ──────────────────────────────────
+  backend-lint:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx eslint "{src,apps,libs,test}/**/*.ts" --fix
+        working-directory: packages/backend
+
+  backend-test:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/backend
+    env:
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/telehealings_test"
+      JWT_SECRET: "ci-test-secret"
+      JWT_REFRESH_SECRET: "ci-test-refresh-secret"
+      NODE_ENV: test
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: telehealings_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: cd packages/backend && npx prisma generate
+      - run: cd packages/backend && npx prisma migrate deploy
+      - run: cd packages/backend && npx jest --ci --coverage
+        working-directory: packages/backend
+
+  backend-build:
+    needs: [backend-lint, backend-test]
+    if: always() && needs.backend-lint.result != 'failure' && needs.backend-test.result != 'failure'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx nest build
+        working-directory: packages/backend
+
+  # ── Shared package type-check ─────────────────────────────────
+  shared-typecheck:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shared == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shared
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+        working-directory: shared
+
+  # ── Final status gate ─────────────────────────────────────────
+  ci-pass:
+    needs:
+      - mobile-lint
+      - mobile-test
+      - mobile-build
+      - therapist-web-lint
+      - therapist-web-test
+      - therapist-web-build
+      - admin-web-lint
+      - admin-web-test
+      - admin-web-build
+      - backend-lint
+      - backend-test
+      - backend-build
+      - shared-typecheck
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all jobs passed
+        run: |
+          results=(
+            "${{ needs.mobile-lint.result }}"
+            "${{ needs.mobile-test.result }}"
+            "${{ needs.mobile-build.result }}"
+            "${{ needs.therapist-web-lint.result }}"
+            "${{ needs.therapist-web-test.result }}"
+            "${{ needs.therapist-web-build.result }}"
+            "${{ needs.admin-web-lint.result }}"
+            "${{ needs.admin-web-test.result }}"
+            "${{ needs.admin-web-build.result }}"
+            "${{ needs.backend-lint.result }}"
+            "${{ needs.backend-test.result }}"
+            "${{ needs.backend-build.result }}"
+            "${{ needs.shared-typecheck.result }}"
+          )
+          for r in "${results[@]}"; do
+            if [ "$r" = "failure" ]; then
+              echo "A job failed: $r"
+              exit 1
+            fi
+          done
+          echo "All required jobs passed or were skipped (no changes)."

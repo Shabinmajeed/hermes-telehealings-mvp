@@ -1,0 +1,188 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  # ── Deploy Backend ────────────────────────────────────────────
+  deploy-backend:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build backend
+        run: |
+          cd packages/backend
+          npx prisma generate
+          npx nest build
+      - name: Deploy backend to staging
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          STAGING_DEPLOY_PATH: ${{ secrets.STAGING_DEPLOY_PATH }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$STAGING_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$STAGING_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          # Create deployment archive
+          cd packages/backend
+          tar -czf /tmp/backend-deploy.tar.gz dist/ prisma/ package.json
+
+          # Upload and deploy
+          scp -i ~/.ssh/deploy_key /tmp/backend-deploy.tar.gz \
+            ${STAGING_USER}@${STAGING_HOST}:${STAGING_DEPLOY_PATH}/
+
+          ssh -i ~/.ssh/deploy_key ${STAGING_USER}@${STAGING_HOST} << 'REMOTE'
+            set -e
+            cd $STAGING_DEPLOY_PATH
+            tar -xzf backend-deploy.tar.gz
+            npm ci --production
+            npx prisma migrate deploy
+            pm2 restart telehealings-backend || pm2 start dist/main.js --name telehealings-backend
+            echo "Backend deployed successfully"
+          REMOTE
+
+  # ── Deploy Therapist Web ─────────────────────────────────────
+  deploy-therapist-web:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build therapist web
+        run: |
+          cd packages/web-therapist
+          echo "VITE_API_URL=${{ secrets.STAGING_API_URL }}" > .env.production
+          npx vite build
+      - name: Deploy therapist web to staging
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          STAGING_THERAPIST_PATH: ${{ secrets.STAGING_THERAPIST_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$STAGING_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$STAGING_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          cd packages/web-therapist
+          tar -czf /tmp/therapist-web-deploy.tar.gz dist/
+
+          scp -i ~/.ssh/deploy_key /tmp/therapist-web-deploy.tar.gz \
+            ${STAGING_USER}@${STAGING_HOST}:${STAGING_THERAPIST_PATH}/
+
+          ssh -i ~/.ssh/deploy_key ${STAGING_USER}@${STAGING_HOST} << 'REMOTE'
+            cd $STAGING_THERAPIST_PATH
+            tar -xzf therapist-web-deploy.tar.gz --strip-components=1
+            echo "Therapist web deployed successfully"
+          REMOTE
+
+  # ── Deploy Admin Web ─────────────────────────────────────────
+  deploy-admin-web:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build admin web
+        run: |
+          cd packages/web-admin
+          echo "VITE_API_URL=${{ secrets.STAGING_API_URL }}" > .env.production
+          npx vite build
+      - name: Deploy admin web to staging
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          STAGING_ADMIN_PATH: ${{ secrets.STAGING_ADMIN_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$STAGING_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$STAGING_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          cd packages/web-admin
+          tar -czf /tmp/admin-web-deploy.tar.gz dist/
+
+          scp -i ~/.ssh/deploy_key /tmp/admin-web-deploy.tar.gz \
+            ${STAGING_USER}@${STAGING_HOST}:${STAGING_ADMIN_PATH}/
+
+          ssh -i ~/.ssh/deploy_key ${STAGING_USER}@${STAGING_HOST} << 'REMOTE'
+            cd $STAGING_ADMIN_PATH
+            tar -xzf admin-web-deploy.tar.gz --strip-components=1
+            echo "Admin web deployed successfully"
+          REMOTE
+
+  # ── Smoke test after deploy ──────────────────────────────────
+  smoke-test:
+    needs: [deploy-backend, deploy-therapist-web, deploy-admin-web]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Check backend health
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            ${{ secrets.STAGING_API_URL }}/health || echo "000")
+          if [ "$STATUS" != "200" ]; then
+            echo "Backend health check failed: HTTP $STATUS"
+            exit 1
+          fi
+          echo "Backend healthy (HTTP $STATUS)"
+
+      - name: Check therapist web
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            ${{ secrets.STAGING_THERAPIST_URL }} || echo "000")
+          if [ "$STATUS" != "200" ]; then
+            echo "Therapist web check failed: HTTP $STATUS"
+            exit 1
+          fi
+          echo "Therapist web healthy (HTTP $STATUS)"
+
+      - name: Check admin web
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            ${{ secrets.STAGING_ADMIN_URL }} || echo "000")
+          if [ "$STATUS" != "200" ]; then
+            echo "Admin web check failed: HTTP $STATUS"
+            exit 1
+          fi
+          echo "Admin web healthy (HTTP $STATUS)"
+
+      - name: Notify success
+        run: echo "Staging deployment complete. All services healthy."

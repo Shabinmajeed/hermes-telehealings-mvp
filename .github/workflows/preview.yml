@@ -1,0 +1,101 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Preview Therapist Web ─────────────────────────────────────
+  preview-therapist-web:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'preview:therapist') || contains(github.event.pull_request.labels.*.name, 'preview:all')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build therapist web preview
+        run: |
+          cd packages/web-therapist
+          echo "VITE_API_URL=${{ secrets.STAGING_API_URL }}" > .env.production
+          npx vite build
+      - name: Deploy preview to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: packages/web-therapist/dist
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Preview: PR #${{ github.event.pull_request.number }} - Therapist Web"
+          alias: pr-${{ github.event.pull_request.number }}-therapist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_THERAPIST_SITE_ID }}
+
+  # ── Preview Admin Web ─────────────────────────────────────────
+  preview-admin-web:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'preview:admin') || contains(github.event.pull_request.labels.*.name, 'preview:all')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build admin web preview
+        run: |
+          cd packages/web-admin
+          echo "VITE_API_URL=${{ secrets.STAGING_API_URL }}" > .env.production
+          npx vite build
+      - name: Deploy preview to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: packages/web-admin/dist
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Preview: PR #${{ github.event.pull_request.number }} - Admin Web"
+          alias: pr-${{ github.event.pull_request.number }}-admin
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_ADMIN_SITE_ID }}
+
+  # ── Comment PR with preview URLs ─────────────────────────────
+  comment-preview-url:
+    needs: [preview-therapist-web, preview-admin-web]
+    runs-on: ubuntu-latest
+    if: always()
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Find existing comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "Preview Deployments"
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            ## Preview Deployments
+
+            | Service | Status | URL |
+            |---------|--------|-----|
+            | Therapist Web | ${{ needs.preview-therapist-web.result == 'success' && 'Ready' || needs.preview-therapist-web.result == 'skipped' && 'Skipped (no label)' || 'Failed' }} | ${{ needs.preview-therapist-web.result == 'success' && format('https://pr-{0}-therapist--telehealings.netlify.app', github.event.pull_request.number) || '-' }} |
+            | Admin Web | ${{ needs.preview-admin-web.result == 'success' && 'Ready' || needs.preview-admin-web.result == 'skipped' && 'Skipped (no label)' || 'Failed' }} | ${{ needs.preview-admin-web.result == 'success' && format('https://pr-{0}-admin--telehealings.netlify.app', github.event.pull_request.number) || '-' }} |
+
+            _Add `preview:therapist`, `preview:admin`, or `preview:all` labels to trigger preview deploys._
