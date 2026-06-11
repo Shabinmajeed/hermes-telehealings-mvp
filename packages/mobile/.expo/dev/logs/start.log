@@ -1,0 +1,149 @@
+{"_e":"root:init","_t":1780945105081,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780945105082,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780945105085,"mode":"development","files":[],"env":{}}
+{"_e":"root:init","_t":1780945190797,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780945190798,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780945190805,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780945191611,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780945195001,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780945202428,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780945204625,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1780945753296,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780945753297,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780945753299,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780945753660,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780945754792,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780945755006,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780945760491,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1780945810746,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780945810747,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780945810749,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780945811103,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780945812211,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780945812437,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780945817769,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"metro:bundling:started","_t":1780972459125,"id":"1","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780972479566,"id":"1","total":986,"ms":20440.346136}
+{"_e":"root:init","_t":1780972925800,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780972925800,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780972925802,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780972926160,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780972927345,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780972927670,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780972933322,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"metro:bundling:started","_t":1780973036607,"id":"2","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780973057764,"id":"2","total":986,"ms":21157.163277}
+{"_e":"metro:bundling:started","_t":1780973062156,"id":"4","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:started","_t":1780973099879,"id":"6","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780973099927,"id":"6","total":1,"ms":48.323501}
+{"_e":"metro:bundling:started","_t":1780973102025,"id":"7","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:started","_t":1780973105824,"id":"a","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780973105867,"id":"a","total":1,"ms":42.772473}
+{"_e":"metro:bundling:started","_t":1780973107524,"id":"b","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:started","_t":1780973113685,"id":"d","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780973113764,"id":"d","total":1,"ms":78.679099}
+{"_e":"metro:bundling:started","_t":1780973115327,"id":"f","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:started","_t":1780973134181,"id":"h","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780973134233,"id":"h","total":1,"ms":52.196157}
+{"_e":"metro:bundling:started","_t":1780973136224,"id":"k","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:failed","_t":1780973513807,"id":null,"message":"Unable to resolve \"./_app\" from \"packages/mobile/index.js\"\n  1 | import { registerRootComponent } from 'expo';\n> 2 | import App from './_app';\n    |                  ^\n  3 |\n  4 | registerRootComponent(App);\n  5 |","importStack":"Import stack:\n\n packages/mobile/index.js\n | import \"./_app\"\n\n \n | import \"./packages/mobile/index\"\n","filename":null,"targetModuleName":"./_app","originModulePath":"packages/mobile/index.js"}
+{"_e":"root:init","_t":1780973632622,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780973632623,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780973632625,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780973632988,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780973634131,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780973634432,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780973639943,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1780974082685,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1780974082686,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1780974082688,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1780974083039,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1780974084207,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1780974084417,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1780974089879,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"metro:bundling:started","_t":1780977299788,"id":"1","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1780977313984,"id":"1","total":771,"ms":14195.323566}
+{"_e":"metro:bundling:started","_t":1780977316585,"id":"4","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"root:init","_t":1781055613554,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781055613557,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781055613560,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781055614089,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781055615644,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781055616147,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781055621449,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"metro:bundling:started","_t":1781066705749,"id":"1","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1781066708127,"id":"1","total":782,"ms":2377.729733}
+{"_e":"metro:bundling:started","_t":1781066724979,"id":"3","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"root:init","_t":1781067432529,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781067432530,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781067432532,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781067432892,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781067434039,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781067434243,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781067438694,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781067514108,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781067514108,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781067514111,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781067514465,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781067515568,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781067515745,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781067520301,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781068451919,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781068451919,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781068451921,"mode":"development","files":[],"env":{}}
+{"_e":"root:init","_t":1781068554296,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781068554297,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781068554299,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781068554656,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781068555746,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781068555934,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781068560447,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781068575910,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781068575911,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781068575913,"mode":"development","files":[],"env":{}}
+{"_e":"root:init","_t":1781068649163,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781068649164,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781068649166,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781068649513,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781068650625,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781068650842,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781068655310,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781068857243,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781068857243,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781068857245,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781068857598,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781068858700,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781068858890,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781068863340,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781069836266,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781069836267,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781069836269,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781069836625,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781069837782,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781069837967,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781069842477,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"metro:bundling:started","_t":1781069848448,"id":"2","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:bundling:done","_t":1781069852633,"id":"2","total":783,"ms":4184.920641}
+{"_e":"metro:bundling:started","_t":1781069874586,"id":"3","platform":"web","environment":null,"entry":"packages/mobile/index.js"}
+{"_e":"metro:client_log","_t":1781069875266,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1781069875267,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:client_log","_t":1781069875952,"level":"warn","data":["Animated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md"]}
+{"_e":"metro:client_log","_t":1781069875981,"level":"log","data":["[web] Logs will appear in the browser console"]}
+{"_e":"metro:client_log","_t":1781069890181,"level":"warn","data":["props.pointerEvents is deprecated. Use style.pointerEvents"]}
+{"_e":"root:init","_t":1781134437865,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781134437872,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781134438152,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781134450125,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781134496305,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781134502048,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781134532420,"atlas":false,"workers":1,"host":"::","port":3001}
+{"_e":"root:init","_t":1781134813135,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781134813137,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781134813142,"mode":"development","files":[],"env":{}}
+{"_e":"root:init","_t":1781134838611,"format":"v0-jsonl","version":"56.1.14"}
+{"_e":"env:mode","_t":1781134838613,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781134838618,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781134839625,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781134842753,"serverRoot":"../../../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":true,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:server_log","_t":1781134843260,"level":"error","data":["An unknown error occurred while installing React Native DevTools. Details:\n\n/home/azureuser/Telehealings Project/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libgtk-3.so.0: cannot open shared object file: No such file or directory\n"]}
+{"_e":"metro:instantiate","_t":1781134857921,"atlas":false,"workers":1,"host":"::","port":3001}
