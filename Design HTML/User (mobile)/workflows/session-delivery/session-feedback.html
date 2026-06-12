@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Session Feedback</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-container {
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Close Header */
+    .header-close {
+      padding: 24px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .header-close svg {
+      cursor: pointer;
+      color: #64748b;
+      transition: color 0.2s ease;
+    }
+
+    .header-close svg:active {
+      color: #1a293b;
+    }
+
+    /* Content */
+    .content-section {
+      flex: 1;
+      padding: 0 24px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: slideFadeUp 0.5s ease-out forwards;
+      overflow-y: auto;
+    }
+
+    .therapist-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border: 4px solid #f8fafc;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1a293b;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* Star Rating */
+    .stars-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .star {
+      width: 40px;
+      height: 40px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .star.active {
+      color: #f59e0b; /* Amber / Gold */
+      fill: #f59e0b;
+      transform: scale(1.15);
+    }
+
+    /* Feedback Input */
+    .feedback-input {
+      width: 100%;
+      height: 140px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 15px;
+      color: #1a293b;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      margin-bottom: auto; /* Pushes the buttons to the bottom */
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .feedback-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .feedback-input:focus {
+      border-color: #3b82f6;
+      background: #ffffff;
+    }
+
+    /* Actions */
+    .bottom-actions {
+      width: 100%;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-skip {
+      background: transparent;
+      color: #64748b;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 16px;
+      cursor: pointer;
+    }
+
+    /* Success Toast Popup */
+    .toast-message {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px) scale(0.95);
+      background: #ffffff;
+      color: #1a293b;
+      padding: 16px 24px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      border: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast-message svg {
+      color: #10b981; /* Success Green */
+    }
+
+    .toast-message.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  </style>
+  <link rel="stylesheet" href="../../css/overrides.css">
+</head>
+<body>
+
+  <div class="mobile-app-container feedback-container">
+    <div class="header-close">
+      <!-- Clicking X redirects to Appointments screen -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" onclick="window.location.href='./appointments.html'">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </div>
+
+    <div class="content-section">
+      <img src="../../src/therapist-1.jpg" class="therapist-avatar" alt="Dr. John">
+      
+      <h2 class="title">How was your session with Dr. John?</h2>
+      <p class="subtitle">Your feedback helps us improve our services.</p>
+      
+      <div class="stars-container">
+        <svg class="star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg class="star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg class="star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg class="star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <svg class="star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      </div>
+
+      <textarea class="feedback-input" placeholder="Tell us more about your experience (Optional)"></textarea>
+
+      <div class="bottom-actions">
+        <button class="btn-primary" id="submitBtn" style="width: 100%; margin: 0;">
+          Submit Feedback
+        </button>
+        <button class="btn-skip" onclick="window.location.href='./appointments.html'">
+          Skip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtle Success Toast -->
+  <div class="toast-message" id="successToast">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    Thank you for your feedback!
+  </div>
+
+  <script>
+    // Interactive Star Rating Logic
+    const stars = document.querySelectorAll('.star');
+    
+    stars.forEach((star, index) => {
+      star.addEventListener('click', () => {
+        stars.forEach((s, i) => {
+          if (i <= index) {
+            s.classList.add('active');
+          } else {
+            s.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // Submit Feedback Logic
+    const submitBtn = document.getElementById('submitBtn');
+    const successToast = document.getElementById('successToast');
+
+    if (submitBtn && successToast) {
+      submitBtn.addEventListener('click', () => {
+        successToast.classList.add('show');
+        submitBtn.style.opacity = '0.7';
+        submitBtn.style.pointerEvents = 'none'; // Prevent double clicking
+        
+        setTimeout(() => {
+          window.location.href = './appointments.html';
+        }, 2000); // Redirect after 2 seconds
+      });
+    }
+  </script>
+</body>
+</html>

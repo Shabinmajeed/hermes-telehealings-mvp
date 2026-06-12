@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import api from '../../../src/services/api';
+import api from '@services/api';
 
 /*
  * Design ref: Design HTML/User (mobile)/workflows/login/login.html
@@ -188,7 +188,7 @@ export default function LoginPage() {
 
           <View style={styles.headerHeali}>
             <Image
-              source={require('../../../src/assets/images/Heali.png')}
+              source={require('../../src/assets/images/Heali.png')}
               style={styles.healiImg}
               resizeMode="contain"
             />
@@ -309,7 +309,7 @@ export default function LoginPage() {
             onPress={handleGoogleLogin}
           >
             <Image
-              source={require('../../../src/assets/images/google.png')}
+              source={require('../../src/assets/images/google.png')}
               style={styles.socialIcon}
               resizeMode="contain"
             />
@@ -322,7 +322,7 @@ export default function LoginPage() {
             onPress={handleAppleLogin}
           >
             <Image
-              source={require('../../../src/assets/images/apple.png')}
+              source={require('../../src/assets/images/apple.png')}
               style={styles.socialIcon}
               resizeMode="contain"
             />

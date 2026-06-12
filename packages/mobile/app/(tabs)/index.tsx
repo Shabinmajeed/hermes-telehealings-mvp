@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path, Circle, Rect, Line, Polyline, Polygon } from 'react-native-svg';
+import { useAuth } from '@/context/AuthContext';
 
 /* ─────────────────────────────────────────────
    SVG Icon Components (react-native-svg)
@@ -304,6 +305,8 @@ function getGreeting(): string {
    Main Screen
    ───────────────────────────────────────────── */
 export default function HomeScreen() {
+  const { userName, isGuest } = useAuth();
+  const displayName = userName || 'Guest';
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [journalText, setJournalText] = useState('');
   const [showMoodCard, setShowMoodCard] = useState(true);
@@ -456,7 +459,7 @@ export default function HomeScreen() {
               activeOpacity={0.7}
             >
               <View style={styles.userNameBox}>
-                <Text style={styles.userName}>Ajesh Anand</Text>
+                <Text style={styles.userName}>{displayName}</Text>
                 <ChevronDown />
 
                 {/* User Dropdown */}
@@ -521,7 +524,7 @@ export default function HomeScreen() {
           <View style={styles.greetingSection}>
             <View style={styles.greetingContent}>
               <Text style={styles.greetingHeading}>
-                {getGreeting()}, Ajesh Anand
+                {getGreeting()}, {displayName}
               </Text>
               <Text style={styles.greetingSubtext}>
                 We're here to help you manage your stress today. Take a moment for yourself.
@@ -530,7 +533,7 @@ export default function HomeScreen() {
             {/* Heali Mascot Image */}
             <View style={styles.greetingHeali}>
               <Image
-                source={require('../../../src/assets/images/Heali.png')}
+                source={require('../../src/assets/images/Heali.png')}
                 style={styles.healiImage}
                 resizeMode="contain"
               />

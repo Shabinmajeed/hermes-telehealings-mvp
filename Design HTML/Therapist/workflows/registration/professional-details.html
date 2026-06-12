@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Professional Details</title>
+    <link rel="stylesheet" href="../../css/global.css">
+     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: var(--viewport-height, 100vh);
+            overflow: hidden;
+            padding: 40px 20px;
+        }
+
+        /* --- Header & Branding --- */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #0745b1;
+            margin-bottom: 6px;
+        }
+
+        /* --- Registration Card Container --- */
+        .registration-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .penguin-mascot {
+            position: absolute;
+            top: -140px;
+            right: -120px;
+            width: 250px;
+            height: auto;
+            z-index: 0;
+        }
+
+        .registration-card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 80vh;
+        }
+
+        .card-body {
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* Subtle custom scrollbar */
+        .card-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .card-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .card-body::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .step-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2a73d4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* --- Form Inputs --- */
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border-color: #2a73d4;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(42, 115, 212, 0.1);
+        }
+
+        /* --- File Upload Area --- */
+        .file-upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-zone:hover {
+            border-color: #2a73d4;
+            background-color: #eff6ff;
+        }
+
+        .file-upload-icon {
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            font-size: 14px;
+            color: #475569;
+            margin: 0 0 4px 0;
+        }
+
+        .file-upload-text span {
+            color: #2a73d4;
+            font-weight: 600;
+        }
+
+        .file-upload-subtext {
+            font-size: 12px;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        /* --- Form Fields Group --- */
+        .form-fields-group {
+            max-height: 280px; /* Control the height of the group here */
+            overflow-y: auto;
+            padding-right: 8px; /* Adds a little space for the scrollbar */
+        }
+        
+        .form-fields-group::-webkit-scrollbar {
+            width: 6px;
+        }
+        .form-fields-group::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .form-fields-group::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* --- Actions & Links --- */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background-color: #2a73d4;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2361b5;
+        }
+
+        /* --- Card Footer --- */
+        .card-footer {
+            background-color: #f8fafc;
+            padding: 22px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .back-link {
+            color: #64748b;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="../../assets/icons/Logo.png" alt="Telehealings Logo" class="logo-img">
+        <h1 class="brand-title">Telehealings</h1>
+    </div>
+
+    <div class="registration-wrapper">
+        <img src="../../assets/icons/Heali-peak.png" alt="Penguin Mascot" class="penguin-mascot">
+        
+        <div class="registration-card">
+            <div class="card-body">
+                <span class="step-indicator">Step 2 of 2</span>
+                <h2 class="page-title">Professional Details</h2>
+                <p class="page-subtitle">Provide your credentialing information so we can verify your practice.</p>
+
+                <div class="form-fields-group">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label">Primary Specialization</label>
+                        <select class="form-control" style="color: #0f172a;">
+                            <option value="" disabled selected>Select specialization</option>
+                            <option>Clinical Psychology</option>
+                            <option>Counseling</option>
+                            <option>Psychiatry</option>
+                            <option>Social Work (LCSW)</option>
+                            <option>Marriage & Family Therapy</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">NPI Number</label>
+                        <input type="text" class="form-control" placeholder="10-digit NPI">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">State License Number</label>
+                    <input type="text" class="form-control" placeholder="e.g. PSY123456">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Upload Medical License</label>
+                    <div class="file-upload-zone" onclick="document.getElementById('fileInput').click()">
+                        <svg class="file-upload-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="file-upload-text"><span>Click to upload</span> or drag and drop</p>
+                        <p class="file-upload-subtext">PDF, JPG, or PNG (Max. 5MB)</p>
+                        <input type="file" id="fileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                </div>
+                </div>
+
+                <button class="btn-primary" onclick="alert('Proceeding to Step 3: Verification Pending Screen')">Submit Application</button>
+
+            </div>
+            <div class="card-footer">
+                <a href="registration.html" class="back-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to previous step
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

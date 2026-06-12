@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Soft Onboarding</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    /* Animations */
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Screen Container */
+    .soft-onboarding-container {
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: hidden; /* Prevents vertical scrolling */
+    }
+
+    /* Top Gradient Section */
+    .top-section {
+      /* Matches the white-to-blue transition in the reference */
+      background: linear-gradient(180deg, #ffffff 0%, #e2effb 40%, #8db8f1 100%);
+      border-radius: 0 0 50% 50% / 0 0 35px 35px;
+      padding: 6vh 20px 4vh 20px; /* Responsive vertical padding */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .title {
+      color: #1e5ab8;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+      opacity: 0;
+      animation: slideFadeUp 0.6s ease-out 0.1s forwards;
+    }
+
+    .subtitle {
+      color: #1e5ab8;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3vh;
+      letter-spacing: -0.1px;
+      opacity: 0;
+      animation: slideFadeUp 0.6s ease-out 0.2s forwards;
+    }
+
+   .heali-img {
+     height: 26vh;
+     max-height: 280px;
+     width: auto;
+     margin-bottom: 3vh;
+     opacity: 0;
+     /* Plays the slide fade first, then infinitely loops the floatBob */
+     animation: 
+       slideFadeUp 0.6s ease-out 0.3s forwards,
+       floatBob 4s ease-in-out 0.9s infinite; 
+   }
+   
+
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    .question-text {
+      color: #334155;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: slideFadeUp 0.6s ease-out 0.4s forwards;
+    }
+    
+
+    /* Bottom Section */
+    .bottom-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 6vh 30px 20px 30px;
+      background-color: #ffffff;
+      opacity: 0;
+      animation: slideFadeUp 0.6s ease-out 0.5s forwards;
+    }
+
+    /* Input Field */
+    .input-field {
+      width: 100%;
+      height: 56px;
+      padding: 0 24px;
+      border: 1px solid rgba(56, 123, 213, 0.15);
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a293b;
+      margin-bottom: 24px;
+      outline: none;
+      background-color: #ffffff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .input-field::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .input-field:focus {
+      border-color: #387bd5;
+      box-shadow: 0 0 0 4px rgba(56, 123, 213, 0.15);
+    }
+
+    /* Terms & Privacy Layout */
+    .consent-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      width: 100%;
+    }
+
+    .consent-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+      flex-shrink: 0;
+      background-color: #ffffff;
+    }
+    
+    .consent-checkbox:checked {
+      background-color: #387bd5;
+      border-color: #387bd5;
+    }
+    
+    .consent-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    .consent-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    .consent-text a {
+      color: #387bd5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+
+    /* Footer Link */
+    .footer-link {
+      text-align: center;
+      margin-top: auto; /* Pushes the footer dynamically to the very bottom */
+      margin-bottom: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    .footer-link a {
+      color: #387bd5;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+  <link rel="stylesheet" href="../../css/overrides.css">
+</head>
+<body>
+
+  <div class="mobile-app-container soft-onboarding-container">
+    
+    <!-- Top Gradient Area with Heali -->
+    <div class="top-section">
+      <h1 class="title">Hi, I'm Heali</h1>
+      <h2 class="subtitle">AI-Powered Healing Partner</h2>
+      
+      <img src="../../src/Heali.png" alt="Heali the Penguin" class="heali-img">
+      
+    </div>
+
+    <!-- Bottom Input Area -->
+    <div class="bottom-section">
+      
+      <label for="userName" class="question-text">What should we call you?</label>
+      <input type="text" id="userName" class="input-field" placeholder="Your name" autocomplete="name">
+      
+      <div class="consent-row">
+        <input type="checkbox" id="consent-toggle" class="consent-checkbox">
+        <label for="consent-toggle" class="consent-text">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+
+      <button class="btn-primary" onclick="window.location.href='./personalisation.html'">
+        Continue 
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+
+      <p class="footer-link">
+        Existing User? <a href="../login/login.html">Login</a>
+      </p>
+
+    </div>
+
+  </div>
+  
+  <!-- Inject Terms & Conditions Modal Workflow -->
+  <script src="./terms-and-conditions.js"></script>
+</body>
+</html>

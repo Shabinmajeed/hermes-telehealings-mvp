@@ -1,0 +1,161 @@
+html {
+    background-color: #e5e5e5; 
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+/* --- Header & Branding --- */
+.header {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.logo-img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 5px;
+}
+
+.brand-title {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #0745b1;
+    margin-bottom: 6px;
+}
+
+.brand-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #144db9;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4b4b4b;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* --- Registration Card Container --- */
+.registration-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Slightly wider for the two-column layout */
+    margin: 0 auto;
+}
+
+.registration-card {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 35px 35px 25px 35px;
+}
+
+/* --- Form Inputs --- */
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.input-group {
+    position: relative;
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.form-row .input-group {
+    margin-bottom: 0;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 14px 14px 44px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #2a73d4;
+    background-color: #ffffff;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+select.form-control {
+    appearance: none;
+    color: #64748b;
+}
+
+select.form-control:focus {
+    color: #0f172a;
+}
+
+/* --- Actions & Links --- */
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    background-color: #2a73d4;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2361b5;
+}
+
+/* --- Card Footer --- */
+.card-footer {
+    background-color: #f8fafc;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    border-top: 1px solid #e2e8f0;
+}

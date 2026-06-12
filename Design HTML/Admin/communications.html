@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Communications</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        /* --- Base Layout --- */
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; overflow: hidden; background: transparent; }
+
+        .app-shell {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar-container { flex-shrink: 0; }
+
+        .page-shell {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 12px;
+            padding-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .header-tab {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            padding: 0 0 12px 0;
+            position: relative;
+        }
+
+        .header-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 3px;
+            background: #0f172a;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .header-mascot {
+            height: 48px;
+            margin-bottom: -1px;
+        }
+
+        /* --- Chat Interface Layout --- */
+        .chat-container {
+            display: flex;
+            flex: 1;
+            min-height: 0; /* Important for flex-child scrolling */
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        /* --- Chat Sidebar (Left Pane) --- */
+        .chat-sidebar {
+            width: 340px;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+
+        .chat-search-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #64748b;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        
+        /* --- Chat Filters --- */
+        .chat-filters {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            overflow-x: auto;
+        }
+        
+        .chat-filter-btn {
+            background: #f1f5f9; border: 1px solid transparent; color: #475569;
+            padding: 4px 12px; border-radius: 99px; font-size: 11px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .chat-filter-btn:hover { background: #e2e8f0; }
+        .chat-filter-btn.active {
+            background: #eff6ff; color: #2563eb; border-color: #bfdbfe;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+        }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav { display: flex; gap: 24px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; flex-shrink: 0; }
+        .tab-btn { background: transparent; border: none; padding: 10px 4px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; position: relative; transition: color 0.2s; }
+        .tab-btn:hover { color: #0f172a; }
+        .tab-btn.active { color: #2563eb; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #2563eb; border-radius: 2px 2px 0 0; }
+        .tab-content { display: none; flex-direction: column; flex: 1; min-height: 0; }
+        .tab-content.active { display: flex; }
+
+        /* --- Toolbar & Table (For Tickets Tab) --- */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-shrink: 0; flex-wrap: wrap; gap: 12px; }
+        .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .btn-pill { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 99px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-pill svg { width: 16px; height: 16px; }
+        .btn-outline { border: 1px solid #cbd5e1; background: #ffffff; color: #334155; }
+        .btn-outline:hover { background: #f8fafc; }
+        .btn-primary { border: 1px solid #2563eb; background: #2563eb; color: #ffffff; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        .table-card { background: #ffffff; border-radius: 16px; padding: 24px 32px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 20px; border: 1px solid #e2e8f0; flex: 1; overflow-y: auto; }
+        .clients-table { width: 100%; border-collapse: collapse; }
+        .clients-table th { text-align: left; font-size: 13px; font-weight: 500; color: #64748b; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+        .clients-table td { padding: 16px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; vertical-align: middle; }
+        .user-cell { display: flex; align-items: center; gap: 12px; }
+        .user-name { font-weight: 600; color: #0f172a; font-size: 14px; }
+        .user-role { font-size: 12px; color: #64748b; margin-top: 2px; }
+        
+        /* Status Badges for Tickets */
+        .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; min-width: 90px; text-align: center; }
+        .status-open { background: #fee2e2; color: #991b1b; }
+        .status-pending { background: #fef9c3; color: #854d0e; }
+        .status-resolved { background: #dcfce7; color: #166534; }
+
+        /* Link Buttons */
+        .link-btn { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .link-btn:hover { background: #dbeafe; border-color: #93c5fd; }
+        .link-btn:disabled, .link-btn.disabled { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; cursor: not-allowed; }
+
+        /* Ticket Subject */
+        .ticket-id { font-family: monospace; font-size: 13px; color: #64748b; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; }
+        .ticket-subject { font-weight: 600; color: #0f172a; }
+        .ticket-preview { font-size: 12px; color: #64748b; margin-top: 4px; display: block; }
+
+        /* --- Thread Actions --- */
+        .thread-actions {
+            padding: 12px 24px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            display: flex; gap: 12px; align-items: center;
+        }
+        .thread-action-btn {
+            background: #ffffff; border: 1px solid #cbd5e1; color: #334155;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .thread-action-btn:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .thread-action-btn svg { width: 14px; height: 14px; }
+        .thread-action-btn.danger { color: #dc2626; border-color: #fca5a5; }
+        .thread-action-btn.danger:hover { background: #fef2f2; border-color: #f87171; }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-card {
+            background: #ffffff; width: 450px; max-width: 90%; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transform: scale(0.95); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; overflow: hidden;
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+        .modal-title { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;}
+        .modal-title svg { color: #2563eb; }
+        .modal-close { background: transparent; border: none; cursor: pointer; color: #64748b; padding: 4px; border-radius: 50%; }
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 12px; font-weight: 600; color: #475569; }
+        .form-input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; font-family: inherit; outline: none; transition: border 0.2s; box-sizing: border-box; background: #ffffff; color: #0f172a; }
+        .form-input:focus { border-color: #2563eb; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px; background: #fafafa; }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            display: flex;
+            padding: 16px 20px;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        .chat-item:hover { background: #f1f5f9; }
+        .chat-item.active { background: #eff6ff; border-left: 3px solid #2563eb; padding-left: 17px; }
+
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .chat-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+
+        .chat-item-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item-time {
+            font-size: 11px;
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .chat-item-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-item-preview {
+            font-size: 13px;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .unread-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 99px;
+        }
+
+        /* --- Main Chat Window (Right Pane) --- */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            min-width: 0;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .chat-header-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .chat-header-role {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .escalation-tag {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .escalation-tag svg { width: 14px; height: 14px; }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #fafafa;
+        }
+
+        .message {
+            max-width: 75%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.received { align-self: flex-start; }
+        .message.sent { align-self: flex-end; }
+
+        .message-bubble {
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .received .message-bubble {
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            border-top-left-radius: 4px;
+        }
+
+        .sent .message-bubble {
+            background: #2563eb;
+            color: #ffffff;
+            border-top-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+        .sent .message-time { text-align: right; }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        .chat-attach-btn {
+            background: transparent;
+            color: #64748b;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .chat-attach-btn:hover { background: #f1f5f9; color: #0f172a; }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 24px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+            font-size: 14px;
+            transition: border 0.2s;
+            background: #f8fafc;
+        }
+        .chat-input:focus { border-color: #3b82f6; background: #ffffff; }
+
+        .chat-send-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .chat-send-btn:hover { background: #1d4ed8; }
+
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Sidebar Navigation (Injected) -->
+        <div class="sidebar-container" id="sidebar-container"></div>
+
+        <div class="page-shell">
+            <div class="content-wrapper">
+
+                <!-- Header -->
+                <header class="page-header">
+                    <div class="header-tab">Communications & Escalations</div>
+                    <img src="src/Heali-peak.png" class="header-mascot" alt="Mascot">
+                </header>
+
+                <!-- Tabs Navigation -->
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-target="tab-messages">Messages</button>
+                    <button class="tab-btn" data-target="tab-tickets">Support Tickets</button>
+                </div>
+
+                <!-- Tab 1: Messages -->
+                <div id="tab-messages" class="tab-content active">
+                    <!-- Chat UI -->
+                    <div class="chat-container">
+                        <!-- Chat List Sidebar -->
+                        <div class="chat-sidebar">
+                            <div class="chat-search-header">
+                                <div class="search-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    <input type="text" class="search-input" placeholder="Search messages...">
+                                </div>
+                                <div class="chat-filters">
+                                    <button class="chat-filter-btn active" data-filter="all">All</button>
+                                    <button class="chat-filter-btn" data-filter="open">Open (1)</button>
+                                    <button class="chat-filter-btn" data-filter="pending">Pending Logs (1)</button>
+                                    <button class="chat-filter-btn" data-filter="resolved">Resolved (1)</button>
+                                </div>
+                            </div>
+                            <div class="chat-list">
+                                <!-- Active Conversation -->
+                                <div class="chat-item active" data-status="open">
+                                    <img src="https://i.pravatar.cc/150?u=sarah" alt="Dr. Sarah" class="chat-avatar">
+                                    <div class="chat-item-content">
+                                        <div class="chat-item-header">
+                                            <span class="chat-item-name">Dr. Sarah Smith</span>
+                                            <span class="chat-item-time">10:45 AM</span>
+                                        </div>
+                                        <div class="chat-item-bottom">
+                                            <span class="chat-item-preview">Client requested a sudden refund...</span>
+                                            <span class="unread-badge">2</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-item" data-status="resolved">
+                                    <img src="https://i.pravatar.cc/150?u=mike" alt="Mike W." class="chat-avatar">
+                                    <div class="chat-item-content">
+                                        <div class="chat-item-header">
+                                            <span class="chat-item-name">Mike Wheeler (Client)</span>
+                                            <span class="chat-item-time">Yesterday</span>
+                                        </div>
+                                        <div class="chat-item-bottom">
+                                            <span class="chat-item-preview">Thank you, the issue is resolved now.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="chat-item" data-status="pending">
+                                    <img src="https://i.pravatar.cc/150?u=ajesh" alt="Dr. Ajesh" class="chat-avatar">
+                                    <div class="chat-item-content">
+                                        <div class="chat-item-header">
+                                            <span class="chat-item-name">Dr. Ajesh Anand</span>
+                                            <span class="chat-item-time">Mon</span>
+                                        </div>
+                                        <div class="chat-item-bottom">
+                                            <span class="chat-item-preview">Can you update my schedule block?</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Chat Window -->
+                        <div class="chat-main">
+                            <div class="chat-header">
+                                <div class="chat-header-info">
+                                    <img src="https://i.pravatar.cc/150?u=sarah" alt="Dr. Sarah" class="chat-avatar">
+                                    <div>
+                                        <div class="chat-header-name">Dr. Sarah Smith</div>
+                                        <div class="chat-header-role">Therapist • ID: T-0452</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <!-- Link back to corresponding ticket -->
+                                    <button class="link-btn" onclick="window.switchTab('tab-tickets')">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                                        Ticket #TKT-042
+                                    </button>
+                                    <div class="escalation-tag">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        High Priority
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions Bar -->
+                            <div class="thread-actions">
+                                <span style="font-size: 12px; font-weight: 600; color: #64748b; margin-right: 4px;">Quick Actions:</span>
+                                <button class="thread-action-btn danger" id="btnProcessRefund">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                    Process Refund
+                                </button>
+                                <button class="thread-action-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    Rebook Session
+                                </button>
+                                <button class="thread-action-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                    Pull System Logs
+                                </button>
+                            </div>
+
+                            <div class="chat-messages">
+                                <div class="message received">
+                                    <div class="message-bubble">
+                                        Hello Admin, I have a critical issue. My client (Nathaniel Jacob) requested a sudden refund for the session that was already completed yesterday. He claimed technical difficulties on his side.
+                                    </div>
+                                    <div class="message-time">10:42 AM</div>
+                                </div>
+                                <div class="message received">
+                                    <div class="message-bubble">
+                                        How should I proceed with this billing escalation? Please advise.
+                                    </div>
+                                    <div class="message-time">10:43 AM</div>
+                                </div>
+                                <div class="message sent">
+                                    <div class="message-bubble">
+                                        Hi Dr. Sarah. Let me pull up the system logs for that specific session to check for any dropped connections. 
+                                    </div>
+                                    <div class="message-time">10:48 AM</div>
+                                </div>
+                                <div class="message sent">
+                                    <div class="message-bubble">
+                                        I will reach out to him directly from the platform billing side. You don't need to process anything manually.
+                                    </div>
+                                    <div class="message-time">10:49 AM</div>
+                                </div>
+                            </div>
+
+                            <div class="chat-input-area">
+                                <button class="chat-attach-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                                </button>
+                                <input type="text" class="chat-input" placeholder="Type your message here...">
+                                <button class="chat-send-btn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Support Tickets -->
+                <div id="tab-tickets" class="tab-content">
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" class="search-input" placeholder="Search tickets...">
+                            </div>
+                            <button class="btn-pill btn-outline">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                Filters
+                            </button>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-pill btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Create Ticket
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">Ticket ID</th>
+                                    <th style="width: 25%">Submitted By</th>
+                                    <th style="width: 30%">Subject</th>
+                                    <th style="width: 10%">Status</th>
+                                    <th style="width: 20%; text-align:right;">Related Comms</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ticketsTableBody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refund Modal -->
+    <div class="modal-overlay" id="refundModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    Process Refund
+                </div>
+                <button class="modal-close" id="closeRefundModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: #475569; margin: 0;">You are about to issue a refund for <strong>Session S-101</strong> (Nathaniel Jacob). This action cannot be undone.</p>
+                <div class="form-group">
+                    <label class="form-label">Refund Amount</label>
+                    <input type="text" class="form-input" value="₹ 1,500" disabled style="background: #f1f5f9;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reason for Refund</label>
+                    <select class="form-input">
+                        <option>Technical Issues (Platform)</option>
+                        <option>Therapist No-Show</option>
+                        <option>Client Cancellation (Eligible)</option>
+                        <option>Other / Disputed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-pill btn-outline" id="cancelRefundBtn">Cancel</button>
+                <button class="btn-pill btn-primary" style="background: #dc2626; border-color: #dc2626;">Issue Refund</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tickets Data & Rendering
+        const ticketsData = [
+            { id: "TKT-042", user: "Dr. Sarah Smith", role: "Therapist", avatar: "https://i.pravatar.cc/150?u=sarah", subject: "Client refund request (Nathaniel Jacob)", preview: "Requested refund post-session due to technical difficulties.", status: "Open", hasChat: true },
+            { id: "TKT-043", user: "Mike Wheeler", role: "Client", avatar: "https://i.pravatar.cc/150?u=mike", subject: "Video not connecting during call", preview: "The video stream dropped entirely 10 mins in.", status: "Resolved", hasChat: true },
+            { id: "TKT-044", user: "Dr. Ajesh Anand", role: "Therapist", avatar: "https://i.pravatar.cc/150?u=ajesh", subject: "Unable to update schedule block", preview: "The calendar UI throws an error when saving changes.", status: "Pending", hasChat: true },
+            { id: "TKT-045", user: "Jane Hopper", role: "Client", avatar: "https://i.pravatar.cc/150?u=jane", subject: "Invoice mismatch on subscription", preview: "I was charged twice this month for premium.", status: "Open", hasChat: false }
+        ];
+
+        function renderTickets() {
+            const tbody = document.getElementById('ticketsTableBody');
+            if (!tbody) return;
+            
+            ticketsData.forEach(ticket => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="ticket-id">${ticket.id}</span></td>
+                    <td>
+                        <div class="user-cell">
+                            <img src="${ticket.avatar}" class="chat-avatar" style="width: 32px; height: 32px;" alt="${ticket.user}">
+                            <div>
+                                <div class="user-name">${ticket.user}</div>
+                                <div class="user-role">${ticket.role}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ticket-subject">${ticket.subject}</div>
+                        <div class="ticket-preview">${ticket.preview}</div>
+                    </td>
+                    <td><span class="status-badge status-${ticket.status.toLowerCase()}">${ticket.status}</span></td>
+                    <td style="text-align:right;">
+                        ${ticket.hasChat 
+                            ? `<button class="link-btn" onclick="window.switchTab('tab-messages')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> View Chat</button>`
+                            : `<button class="link-btn disabled" disabled><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> No Chat</button>`
+                        }
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        renderTickets();
+
+        // Sidebar Injection Logic
+        function initializeSidebarToggle() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                });
+            }
+        }
+
+        async function injectSidebar() {
+            const container = document.getElementById('sidebar-container');
+            if (!container) return;
+            try {
+                const response = await fetch('./components/side-bar.html');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+
+                const styleElement = doc.querySelector('style');
+                if (styleElement) {
+                    document.head.appendChild(styleElement.cloneNode(true));
+                }
+
+                const bodyChildren = Array.from(doc.body.childNodes);
+                bodyChildren.forEach(node => {
+                    if (node.nodeName.toLowerCase() === 'script') return;
+                    container.appendChild(node.cloneNode(true));
+                });
+
+                // Correct image paths
+                const images = container.querySelectorAll('img');
+                images.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && src.startsWith('../src/')) {
+                        img.setAttribute('src', src.replace('../src/', 'src/'));
+                    }
+                });
+
+                initializeSidebarToggle();
+                
+                // Automatically highlight the "Communications" nav item
+                setTimeout(() => {
+                    const navItems = container.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    const commsNav = Array.from(navItems).find(item => item.getAttribute('href').includes('communications.html'));
+                    if(commsNav) commsNav.classList.add('active');
+                }, 50);
+
+            } catch (error) {
+                container.innerHTML = '<div style="padding: 24px; color: #b91c1c;">Failed to load sidebar component.</div>';
+                console.error('Sidebar injection failed:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', injectSidebar);
+
+        // Global Tab Switching Logic (used by buttons and links)
+        window.switchTab = function(targetId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.target === targetId);
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === targetId);
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => window.switchTab(btn.dataset.target));
+            });
+        });
+
+        // Chat Filters Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.chat-filter-btn');
+            const chatItems = document.querySelectorAll('.chat-item');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.dataset.filter;
+                    
+                    chatItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.status === filter) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+        
+        // Modal Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('refundModal');
+            const btnOpen = document.getElementById('btnProcessRefund');
+            const btnClose = document.getElementById('closeRefundModal');
+            const btnCancel = document.getElementById('cancelRefundBtn');
+            
+            const toggleModal = () => modal.classList.toggle('active');
+            if(btnOpen) btnOpen.addEventListener('click', toggleModal);
+            if(btnClose) btnClose.addEventListener('click', toggleModal);
+            if(btnCancel) btnCancel.addEventListener('click', toggleModal);
+            modal.addEventListener('click', (e) => { if(e.target === modal) toggleModal(); });
+        });
+    </script>
+</body>
+</html>

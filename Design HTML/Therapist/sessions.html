@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Upcoming Sessions</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/sessions-list.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Upcoming Sessions</h1>
+                    <p>View and prepare for your scheduled appointments today.</p>
+                </div>
+            </header>
+
+            <div class="sessions-grid">
+                
+                <!-- Session Card 1 -->
+                <div class="session-card">
+                    <div class="session-header">
+                        <div class="session-time">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            09:00 AM
+                        </div>
+                        <span class="session-badge">Video Call</span>
+                    </div>
+                    
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=1" alt="Sarah Jenkins">
+                        <div class="client-details">
+                            <h3>Sarah Jenkins</h3>
+                            <p>Follow-up CBT</p>
+                        </div>
+                    </div>
+                    
+                    <div class="session-notes">
+                        <strong>Preparation:</strong> Review week 3 thought log and discuss recent workplace anxiety triggers.
+                    </div>
+                    
+                    <div class="session-actions">
+                        <button class="btn-outline" style="flex: 1; padding: 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; color: #0f172a;" onclick="window.location.href='./workflows/clients/clients-profile.html'">View Profile</button>
+                        <!-- Link directly to the session prep view inside the sessions folder -->
+                        <a href="./workflows/sessions/session-prep.html" class="btn-join" style="flex: 1; padding: 10px; background: var(--color-primary, #2a73d4); color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none;">Join Session</a>
+                    </div>
+                </div>
+
+                <!-- Session Card 2 -->
+                <div class="session-card">
+                    <div class="session-header">
+                        <div class="session-time">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            10:30 AM
+                        </div>
+                        <span class="session-badge">Initial Intake</span>
+                    </div>
+                    
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=8" alt="Michael Chen">
+                        <div class="client-details">
+                            <h3>Michael Chen</h3>
+                            <p>First Appointment</p>
+                        </div>
+                    </div>
+                    
+                    <div class="session-notes">
+                        <strong>Preparation:</strong> Patient has not uploaded prior medical history. Ensure to complete the general intake questionnaire.
+                    </div>
+                    
+                    <div class="session-actions">
+                        <button class="btn-outline" style="flex: 1; padding: 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; color: #0f172a;" onclick="window.location.href='./workflows/clients/clients-profile.html'">View Profile</button>
+                        <a href="./workflows/sessions/session-prep.html" class="btn-join" style="flex: 1; padding: 10px; background: var(--color-primary, #2a73d4); color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none;">Join Session</a>
+                    </div>
+                </div>
+                
+                <!-- Session Card 3 -->
+                <div class="session-card">
+                    <div class="session-header">
+                        <div class="session-time">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            01:00 PM
+                        </div>
+                        <span class="session-badge">Video Call</span>
+                    </div>
+                    
+                    <div class="client-info">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Priya Patel">
+                        <div class="client-details">
+                            <h3>Priya Patel</h3>
+                            <p>Routine Check-in</p>
+                        </div>
+                    </div>
+                    
+                    <div class="session-notes">
+                        <strong>Preparation:</strong> Follow up on the grounding exercises assigned last Tuesday.
+                    </div>
+                    
+                    <div class="session-actions">
+                        <button class="btn-outline" style="flex: 1; padding: 10px; background: transparent; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; color: #0f172a;" onclick="window.location.href='./workflows/clients/clients-profile.html'">View Profile</button>
+                        <a href="./workflows/sessions/session-prep.html" class="btn-join" style="flex: 1; padding: 10px; background: var(--color-primary, #2a73d4); color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none;">Join Session</a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('./Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the fifth item (Sessions)
+                    if(navItems.length > 4) {
+                        navItems[4].classList.add('active');
+                    }
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Session Summary</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/session-summary.css">
+
+    <style>
+        /* Success Toast Notification */
+        .toast-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .toast-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .toast-card {
+            background: #ffffff;
+            padding: 32px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-overlay.show .toast-card {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Session Summary: Sarah Jenkins</h1>
+                    <p>Review, modify, and finalize your clinical notes from this session.</p>
+                </div>
+            </header>
+
+            <div class="summary-card">
+                <div class="form-group">
+                    <label>Clinical Notes (SOAP Format)</label>
+                    <textarea class="notes-editor">S: Sarah reports feeling slightly less overwhelmed since implementing the 4-7-8 breathing technique, though she still experiences significant anxiety spikes prior to team meetings.
+
+O: Patient was punctual, properly groomed, and engaged actively throughout the session. Eye contact was consistent. Mood appeared slightly anxious but stable.
+
+A: Generalized Anxiety Symptoms appear to be improving slightly with new coping mechanisms, though specific situational triggers remain potent.
+
+P: Continue practicing 4-7-8 breathing. Assigned "Core Beliefs Matrix" worksheet to begin unearthing the root of the workplace performance anxiety. Follow up scheduled for next week.</textarea>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-secondary" onclick="handleAction('saved as draft')">Save as Draft</button>
+                    <button class="btn-primary" onclick="handleAction('published to client file')">Publish Notes</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Success Toast Notification -->
+    <div class="toast-overlay" id="successToast">
+        <div class="toast-card">
+            <div style="width: 60px; height: 60px; background: #dcfce7; color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h2 style="margin: 0; color: #0f172a; font-size: 20px;" id="toastTitle">Notes Saved!</h2>
+            <p style="margin: 0; color: #64748b; font-size: 14px;">Redirecting back to your sessions dashboard...</p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('../../Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                // Dynamically adjust all root-relative paths for this nested file structure
+                const adjustedData = data.replace(/href="\.\//g, 'href="../../').replace(/src="\.\//g, 'src="../../');
+                document.getElementById('sidebar-container').outerHTML = adjustedData;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the fifth item (Sessions)
+                    if(navItems.length > 4) {
+                        navItems[4].classList.add('active');
+                    }
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+
+        // Handle Save Actions
+        function handleAction(actionType) {
+            const toast = document.getElementById('successToast');
+            const title = document.getElementById('toastTitle');
+            
+            // Capitalize first letter of action
+            const actionText = actionType.charAt(0).toUpperCase() + actionType.slice(1);
+            title.textContent = `Notes ${actionText}!`;
+            
+            toast.classList.add('show');
+            
+            // Wait 2 seconds, then redirect
+            setTimeout(() => {
+                window.location.href = '../../sessions.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

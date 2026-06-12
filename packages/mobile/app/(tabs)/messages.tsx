@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import api, { ChatMessage } from '../../../src/services/api';
+import api, { ChatMessage } from '@services/api';
 
 interface Conversation {
   id: string;

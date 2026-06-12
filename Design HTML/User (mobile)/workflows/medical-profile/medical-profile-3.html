@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings - Medical & Medication</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/buttons.css">
+  <style>
+    @keyframes slideFadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+   
+
+    .mascot {
+      width: 40px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .mascot img {
+      width: 32px;
+      height: auto;
+    }
+
+    /* 4-Step Segmented Stepper */
+    .stepper-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    .stepper-row .step {
+      flex: 1;
+      height: 5px;
+      background: #e2e8f0;
+      border-radius: 3px;
+    }
+
+    .stepper-row .step.active {
+      background: #2563eb;
+    }
+
+    /* Main Form Layout */
+    .form-section {
+      flex: 1;
+      padding: 16px 24px 40px 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideFadeUp 0.5s ease-out forwards;
+      background: #ffffff;
+      z-index: 2;
+      overflow-y: auto;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #000000;
+      margin-bottom: 8px;
+      margin-top: 8px;
+    }
+
+    .page-description {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Question Typography */
+    .question-block {
+      margin-bottom: 16px;
+    }
+
+    .question-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 16px;
+    }
+
+    .sub-question-title {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    /* Option Cards */
+    .radio-card {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #ffffff;
+    }
+
+    .radio-card:active {
+      transform: scale(0.98);
+    }
+
+    .radio-card.selected {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.04);
+    }
+
+    .radio-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid #cbd5e1;
+      margin-right: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .radio-card.selected .radio-circle {
+      border-color: #3b82f6;
+    }
+
+    .radio-card.selected .radio-circle::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: #3b82f6;
+      border-radius: 50%;
+    }
+
+    .radio-label {
+      font-size: 15px;
+      font-weight: 400;
+      color: #334155;
+    }
+
+    .radio-card.selected .radio-label {
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    /* Inline Simple Radio */
+    .inline-radio-group {
+      display: flex;
+      gap: 32px;
+    }
+
+    .simple-radio {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .simple-radio .radio-circle {
+      margin-right: 10px;
+    }
+
+    .simple-radio.selected .radio-circle {
+      border-color: #3b82f6;
+    }
+
+    .simple-radio.selected .radio-circle::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: #3b82f6;
+      border-radius: 50%;
+    }
+
+    .simple-radio .radio-label {
+      font-size: 15px;
+      color: #334155;
+    }
+
+    .simple-radio.selected .radio-label {
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    /* Form Inputs */
+    .custom-input {
+      width: 100%;
+      height: 52px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #1a293b;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+
+    .custom-input::placeholder {
+      color: #64748b;
+    }
+
+    .custom-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    select.custom-input {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      color: #94a3b8; /* Match image reference state */
+    }
+    
+    select.custom-input option {
+      color: #1a293b;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin-top: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="mobile-app-container medical-container">
+    
+    <!-- Shared Global Fixed Header -->
+    <div class="top-section" style="padding-top: 40px; padding-bottom: 25px;">
+      <div class="header-row">
+        <div class="back-btn" onclick="window.history.back()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </div>
+        <h1 class="header-title">Medical Profile</h1>
+        <div class="mascot">
+          <img src="../../src/heali-cropped.png" alt="Heali Mascot">
+        </div>
+      </div>
+
+      <!-- 4-Step Custom Stepper -->
+      <div class="stepper-row">
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step active"></div>
+        <div class="step"></div>
+      </div>
+    </div>
+
+    <!-- Form Area -->
+    <div class="form-section">
+      
+      <h2 class="page-title">Medical & Medication</h2>
+      <p class="page-description">Please provide accurate information regarding your current health status and any substances used. This data is encrypted and strictly confidential.</p>
+
+      <!-- Question 1: Conditions (Multi-select capability) -->
+      <div class="question-block">
+        <div class="question-title">Any ongoing medical conditions</div>
+        
+        <div class="radio-card">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Diabetes</span>
+        </div>
+        
+        <div class="radio-card">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Hypertension</span>
+        </div>
+        
+        <div class="radio-card">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Asthma</span>
+        </div>
+        
+        <div class="radio-card">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Heart Condition</span>
+        </div>
+
+        <!-- Custom Input replacing a card -->
+        <input type="text" class="custom-input" placeholder="Other conditions (please specify)...">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Question 2: Substances -->
+      <div class="question-block">
+        <div class="question-title">Substance use (alcohol, smoking, drugs)</div>
+        
+        <div style="margin-top: 16px; margin-bottom: 24px;">
+            <div class="sub-question-title" style="color: #000000; font-weight: 700;">Tobacco Use</div>
+            <div class="inline-radio-group">
+              <div class="simple-radio">
+                <div class="radio-circle"></div>
+                <span class="radio-label">Never</span>
+              </div>
+              <div class="simple-radio">
+                <div class="radio-circle"></div>
+                <span class="radio-label">Former</span>
+              </div>
+              <div class="simple-radio">
+                <div class="radio-circle"></div>
+                <span class="radio-label">Current</span>
+              </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <div class="sub-question-title" style="color: #64748b; font-weight: 600;">Alcohol Consumption</div>
+            <select class="custom-input" onchange="this.style.color='#1a293b'">
+                <option value="" disabled selected>Select frequency...</option>
+                <option value="none">None</option>
+                <option value="socially">Socially (1-2 times per week)</option>
+                <option value="frequently">Frequently (3+ times per week)</option>
+                <option value="daily">Daily</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 8px;">
+            <div class="sub-question-title" style="color: #64748b; font-weight: 600;">Other Substances</div>
+            <input type="text" class="custom-input" placeholder="Any recreational drug use? (Optional)">
+        </div>
+      </div>
+
+      <!-- Next Button -->
+      <div style="margin-top: 16px; margin-bottom: 24px;">
+        <button class="btn-primary" onclick="window.location.href='medical-profile-4.html'">
+          Save & Next
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Multi-select functionality for Conditions (users could have more than one)
+    document.querySelectorAll('.radio-card').forEach(card => {
+      card.addEventListener('click', function() {
+        this.classList.toggle('selected');
+      });
+    });
+
+    // Single-select functionality for Tobacco radio buttons
+    document.querySelectorAll('.simple-radio').forEach(card => {
+      card.addEventListener('click', function() {
+        const siblings = this.parentElement.querySelectorAll('.simple-radio');
+        siblings.forEach(sib => sib.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import api, { Session } from '../../../src/services/api';
+import api, { Session } from '@services/api';
 
 type SessionTab = 'upcoming' | 'past';
 

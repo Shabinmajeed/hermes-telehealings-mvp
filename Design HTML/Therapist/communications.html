@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Communications</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/communications.css">
+    
+    <style>
+        /* Chat Messages Styles */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        
+        .message-wrapper {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+        }
+
+        .message-wrapper.received {
+            align-self: flex-start;
+        }
+
+        .message-wrapper.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .message-wrapper.sent .message-content {
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #0f172a;
+        }
+
+        .message-wrapper.received .message-bubble {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-wrapper.sent .message-bubble {
+            background-color: var(--color-primary, #2a73d4);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble p {
+            margin: 0;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin: 0 4px;
+        }
+
+        /* Chat Input Styles */
+        .chat-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 8px 12px;
+        }
+
+        .btn-attach {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .btn-attach:hover {
+            color: #475569;
+            background-color: #e2e8f0;
+        }
+
+        .chat-input-field {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            color: #0f172a;
+            outline: none;
+            padding: 8px 0;
+        }
+
+        .chat-input-field::placeholder {
+            color: #94a3b8;
+        }
+
+        .btn-send {
+            background: var(--color-primary, #2a73d4);
+            color: #ffffff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-send:hover {
+            background-color: #1e5bb0;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Communications</h1>
+                    <p>You have 2 unread messages</p>
+                </div>
+                <button class="btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    New Message
+                </button>
+            </header>
+
+            <div class="comm-container">
+                
+                <!-- Left Pane: Conversations List -->
+                <div class="chat-sidebar">
+                    <div class="chat-search">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" placeholder="Search messages...">
+                    </div>
+                    
+                    <div class="chat-list">
+                        <!-- Chat Item (Active & Unread) -->
+                        <div class="chat-item active unread">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Sarah Jenkins">
+                            <div class="chat-item-content">
+                                <div class="chat-item-header">
+                                    <h4>Sarah Jenkins</h4>
+                                    <span>10m ago</span>
+                                </div>
+                                <p class="chat-item-preview">I've been feeling a bit overwhelmed since our last session...</p>
+                            </div>
+                            <div class="unread-dot"></div>
+                        </div>
+                        
+                        <!-- Chat Item (Unread) -->
+                        <div class="chat-item unread">
+                            <img src="https://i.pravatar.cc/150?img=8" alt="Michael Chen">
+                            <div class="chat-item-content">
+                                <div class="chat-item-header">
+                                    <h4>Michael Chen</h4>
+                                    <span>2h ago</span>
+                                </div>
+                                <p class="chat-item-preview">Can we reschedule tomorrow's appointment?</p>
+                            </div>
+                            <div class="unread-dot"></div>
+                        </div>
+                        
+                        <!-- Chat Item (Read) -->
+                        <div class="chat-item">
+                            <img src="https://i.pravatar.cc/150?img=32" alt="Lisa Thompson">
+                            <div class="chat-item-content">
+                                <div class="chat-item-header">
+                                    <h4>Lisa Thompson</h4>
+                                    <span>4h ago</span>
+                                </div>
+                                <p class="chat-item-preview">Completed the worksheet you sent regarding core beliefs.</p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Item (Read) -->
+                        <div class="chat-item">
+                            <img src="https://i.pravatar.cc/150?img=11" alt="David Martinez">
+                            <div class="chat-item-content">
+                                <div class="chat-item-header">
+                                    <h4>David Martinez</h4>
+                                    <span>Yesterday</span>
+                                </div>
+                                <p class="chat-item-preview">Thank you, doctor. I'll read over the material.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Pane: Active Chat Window -->
+                <div class="chat-main">
+                    <div class="chat-main-header">
+                        <div class="chat-user-info">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Sarah Jenkins">
+                            <div>
+                                <h3>Sarah Jenkins</h3>
+                                <p>● Online</p>
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 8px 12px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Area for actual chat bubbles -->
+                    <div class="chat-messages">
+                        <div class="message-wrapper received">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Sarah Jenkins" class="message-avatar">
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p>Hi Dr. Anand, I've been feeling a bit overwhelmed since our last session. The breathing exercises help, but I'm still struggling to focus at work.</p>
+                                </div>
+                                <span class="message-time">09:15 AM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="message-wrapper sent">
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p>Hello Sarah. It's completely normal to feel that way as we start digging into these new techniques. Let's focus on breaking down your workday into smaller chunks today.</p>
+                                </div>
+                                <span class="message-time">09:30 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Area for inputting new messages -->
+                    <div class="chat-input-area">
+                        <div class="chat-input-wrapper">
+                            <button class="btn-attach">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                            </button>
+                            <input type="text" class="chat-input-field" placeholder="Type your message...">
+                            <button class="btn-send">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('./Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the fourth item (Communications)
+                    navItems[3].classList.add('active');
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    // Restore state from LocalStorage
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>

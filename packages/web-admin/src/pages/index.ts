@@ -1,0 +1,11 @@
+export { default as DashboardPage } from './DashboardPage';
+export { default as SessionsPage } from './SessionsPage';
+export { default as ClientsPage } from './ClientsPage';
+export { default as TherapistsPage } from './TherapistsPage';
+export { default as ContentPage } from './ContentPage';
+export { default as CommunicationsPage } from './CommunicationsPage';
+export { default as CompliancePage } from './CompliancePage';
+export { default as FinancialsPage } from './FinancialsPage';
+export { default as AnalyticsPage } from './AnalyticsPage';
+export { default as PromotionPage } from './PromotionPage';
+export { default as SchedulePage } from './SchedulePage';

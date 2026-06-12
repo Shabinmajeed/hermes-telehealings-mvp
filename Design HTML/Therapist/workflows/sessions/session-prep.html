@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - Session Prep</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/session-prep.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Session Preparation</h1>
+                    <p>Review notes and check your hardware before joining.</p>
+                </div>
+            </header>
+
+            <div class="prep-layout">
+                
+                <!-- Left Column: Client Data -->
+                <div class="client-context-col">
+                    <div class="prep-card">
+                        <div class="client-overview">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="Sarah Jenkins">
+                            <div class="client-overview-text">
+                                <h2>Sarah Jenkins</h2>
+                                <p>Session 4 of 12 • Cognitive Behavioral Therapy</p>
+                                <div style="display: inline-block; margin-top: 8px; background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;">Patient waiting in lobby</div>
+                            </div>
+                        </div>
+
+                        <h3 class="prep-section-title">Goals & Progress</h3>
+                        <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+                            <div style="flex: 1; background: #f8fafc; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Anxiety Score (GAD-7)</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #059669;">12 <span style="font-size: 12px; color: #10b981;">(Down from 15)</span></div>
+                            </div>
+                            <div style="flex: 1; background: #f8fafc; padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Worksheets Completed</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #0f172a;">3 / 3</div>
+                            </div>
+                        </div>
+
+                        <h3 class="prep-section-title">Last Session Summary (Oct 17, 2023)</h3>
+                        <p class="prep-text">
+                            Discussed recent workplace anxiety triggers. Sarah identified that speaking in team meetings initiates her panic response. We introduced the 4-7-8 breathing technique and assigned the 'Cognitive Reframing' thought log for homework. <br><br>
+                            <strong>Plan for today:</strong> Review the thought log, discuss any roadblocks with the breathing exercises, and potentially transition into identifying core beliefs surrounding workplace competency.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Pre-Call Check -->
+                <div class="hardware-check-col">
+                    <div class="prep-card">
+                        <h3 class="prep-section-title">Hardware Check</h3>
+                        
+                        <div class="camera-preview">
+                            <!-- Static preview of the therapist -->
+                            <img src="../../assets/icons/therapist-call.png" alt="Camera Preview">
+                        </div>
+
+                        <div style="margin-top: 16px;">
+                            <div class="device-status">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                    Facetime HD Camera
+                                </div>
+                                <span style="color: #10b981;">Working</span>
+                            </div>
+                            <div class="device-status">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                                    Internal Microphone
+                                </div>
+                                <span style="color: #10b981;">Working</span>
+                            </div>
+                            <div class="device-status" style="border-bottom: none;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                                    Network Quality
+                                </div>
+                                <span style="color: #10b981;">Excellent</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-connect" onclick="window.location.href='./active-session.html'" style="margin-top: 24px;">
+                            Connect Call
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('../../Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                // Dynamically adjust all root-relative paths for this nested file structure
+                const adjustedData = data.replace(/href="\.\//g, 'href="../../').replace(/src="\.\//g, 'src="../../');
+                document.getElementById('sidebar-container').outerHTML = adjustedData;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the fifth item (Sessions)
+                    if(navItems.length > 4) {
+                        navItems[4].classList.add('active');
+                    }
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>

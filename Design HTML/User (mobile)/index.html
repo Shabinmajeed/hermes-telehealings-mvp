@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- The viewport meta tag is critical for mobile rendering -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Telehealings</title>
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/buttons.css">
+  <style>
+    /* Splash Screen Styles */
+    .splash-container {
+      /* Subtle radial gradient for premium illumination effect */
+      background: radial-gradient(circle at center, #5b96ea 0%, #387bd5 70%);
+      border: none; /* Clean edge for the splash screen */
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer; /* Added for temporary click functionality */
+    }
+
+    .splash-container.fade-out {
+      opacity: 0;
+    }
+
+    .splash-screen {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+    }
+
+    .brand-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: brandFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .splash-logo-circle {
+      background-color: #ffffff;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      margin-top: -60px; /* Slight visual adjustment to pull it up */
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes brandFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .splash-logo-circle img {
+      width: 100px;
+      height: auto;
+    }
+
+    .splash-title {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .splash-subtitle {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      opacity: 0.85;
+      color: #e2effb;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <!-- The simulated mobile screen -->
+  <div class="mobile-app-container splash-container">
+    
+    <!-- Splash Screen Full Cover -->
+    <div class="splash-screen">
+      <div class="brand-block">
+        <div class="splash-logo-circle">
+          <img src="./src/logo.png" alt="Telehealings Logo">
+        </div>
+        <h1 class="splash-title">Telehealings</h1>
+        <p class="splash-subtitle">Continuity-First Wellness Care Platform</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- TEMPORARILY DISABLED AUTO-TIMEOUT ---
+    // setTimeout(() => {
+    //   // Trigger the CSS fade-out transition
+    //   document.querySelector('.splash-container').classList.add('fade-out');
+    //   // Wait for the opacity transition to finish before navigating
+    //   setTimeout(() => {
+    //     window.location.href = './workflows/soft-onboarding/marketing.html';
+    //   }, 600); 
+    // }, 5000);
+
+    // --- CLICK TO CONTINUE (Temporary) ---
+    document.querySelector('.splash-container').addEventListener('click', () => {
+      document.querySelector('.splash-container').classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = './workflows/soft-onboarding/marketing.html';
+      }, 600);
+    });
+  </script>
+</body>
+</html>

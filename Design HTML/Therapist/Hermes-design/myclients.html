@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telehealings - My Clients</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           GLOBAL CSS (from global.css)
+           ========================================================================== */
+        :root {
+            /* 11-inch Tablet (e.g., iPad Pro 11") CSS Viewport Dimensions */
+            --viewport-width: 1194px;
+            --viewport-height: 834px;
+
+            /* Brand Colors from Design */
+            --color-primary: #2a73d4;
+            --color-primary-hover: #2361b5;
+            --text-main: #111111;
+            --text-muted: #4b4b4b;
+            --bg-gradient-start: #ffffff;
+            --bg-gradient-mid: #eef5fc;
+            --bg-gradient-end: #7aaaf6;
+        }
+
+        /* Standard CSS Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center the tablet layout vertically and horizontally within the browser viewport */
+        html {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Prevents the body's background from propagating to the entire browser window */
+            background-color: #e5e5e5;
+        }
+
+        /* 
+          Since the pages are specifically designed for an 11-inch tablet,
+          we constrain the main body to act exactly like a tablet viewport.
+          On larger screens, this will center the tablet-sized layout.
+        */
+        body {
+            width: 100%;
+            max-width: var(--viewport-width);
+            min-height: var(--viewport-height);
+            margin: 0 auto; /* Centers the layout on screens larger than 834px */
+            position: relative;
+            
+            /* Optional: Adds a subtle shadow on desktop to show the tablet boundaries */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+
+            /* Global Typography & Background */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main);
+            background: linear-gradient(110deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 35%, var(--bg-gradient-end) 100%);
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           CLIENTS PAGE CSS (from clients.css)
+           ========================================================================== */
+        /* Layout & Main Content */
+        .dashboard-layout {
+            display: flex;
+            width: 100%;
+            height: var(--viewport-height, 100vh);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 0 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+        }
+
+        .main-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Header */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 40px 40px 20px 40px;
+            margin: 0 -40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 15px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary, #2a73d4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e5bb0;
+        }
+
+        /* Clients Navigation / Filtering */
+        .clients-filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 16px 0;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            background: #f8fafc;
+        }
+
+        .filter-tab.active {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
+
+        .search-clients {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-clients input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-clients input:focus {
+            border-color: var(--color-primary, #2a73d4);
+        }
+
+        .search-clients svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        /* Clients Container & Table */
+        .clients-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            margin-top: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .clients-table th {
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #f1f5f9;
+            background: #f8fafc;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .sortable:hover {
+            background-color: #f1f5f9;
+        }
+
+        .th-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sort-icon {
+            color: #cbd5e1;
+            transition: color 0.2s;
+        }
+
+        .sortable:hover .sort-icon {
+            color: #64748b;
+        }
+
+        .clients-table td {
+            padding: 16px 24px;
+            font-size: 14px;
+            color: #475569;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .client-row {
+            transition: background-color 0.2s;
+        }
+
+        .client-row:hover {
+            background-color: #f8fafc;
+        }
+
+        .client-profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .client-profile-cell img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .client-email {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-paused {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .btn-view {
+            display: inline-block;
+            color: var(--color-primary, #2a73d4);
+            background: #eff6ff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view:hover {
+            background: #dbeafe;
+        }
+
+        /* Pagination Controls */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: #ffffff;
+        }
+
+        .pagination-info {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(.disabled) {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .page-btn.active {
+            background: var(--color-primary, #2a73d4);
+            color: #ffffff;
+            border-color: var(--color-primary, #2a73d4);
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-dots {
+            color: #94a3b8;
+            padding: 0 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar injection placeholder -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>My Clients</h1>
+                    <p>You have 32 active clients</p>
+                </div>
+            </header>
+
+            <div class="clients-filter-bar">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">All Clients</button>
+                    <button class="filter-tab">First Session</button>
+                    <button class="filter-tab">Archived</button>
+                    <button class="filter-tab">Last Session in One Week</button>
+                </div>
+                <div class="search-clients">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search clients by name or email...">
+                </div>
+            </div>
+
+            <div class="clients-container">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Client Details
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th>Status</th>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Last Session
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th class="sortable">
+                                <div class="th-content">
+                                    Next Session
+                                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
+                                </div>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=5" alt="Sarah Johnson">
+                                    <div>
+                                        <span class="client-name">Sarah Johnson</span>
+                                        <span class="client-email">sarah.j@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 12, 2023</td>
+                        <td><strong>Oct 24, 2023</strong><br>(09:00 AM)</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=12" alt="Michael Chen">
+                                    <div>
+                                        <span class="client-name">Michael Chen</span>
+                                        <span class="client-email">m.chen@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 18, 2023</td>
+                        <td><strong>Oct 24, 2023</strong><br>(10:30 AM)</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=32" alt="Priya Patel">
+                                    <div>
+                                        <span class="client-name">Priya Patel</span>
+                                        <span class="client-email">priya.p@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-paused">Paused</span></td>
+                            <td>Sep 28, 2023</td>
+                            <td>To be scheduled</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=9" alt="Emma Wilson">
+                                    <div>
+                                        <span class="client-name">Emma Wilson</span>
+                                        <span class="client-email">emma.w@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 20, 2023</td>
+                        <td><strong>Oct 27, 2023</strong><br>(02:00 PM)</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=11" alt="James Rodriguez">
+                                    <div>
+                                        <span class="client-name">James Rodriguez</span>
+                                        <span class="client-email">james.r@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 21, 2023</td>
+                        <td><strong>Oct 28, 2023</strong><br>(11:00 AM)</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                        <tr class="client-row">
+                            <td>
+                                <div class="client-profile-cell">
+                                    <img src="https://i.pravatar.cc/150?img=47" alt="Lisa Thompson">
+                                    <div>
+                                        <span class="client-name">Lisa Thompson</span>
+                                        <span class="client-email">lisa.t@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Oct 23, 2023</td>
+                        <td><strong>Oct 30, 2023</strong><br>(01:00 PM)</td>
+                            <td><a href="../workflows/clients/clients-profile.html" class="btn-view">View Profile</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Pagination at the bottom of the container -->
+                <div class="pagination-container">
+                    <div class="pagination-info">Showing 1 to 6 of 32 entries</div>
+                    <div class="pagination-nav">
+                        <button class="page-btn disabled">Previous</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-dots">...</span>
+                        <button class="page-btn">6</button>
+                        <button class="page-btn">Next</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Fetch and inject the sidebar
+        fetch('../Components/side-bar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').outerHTML = data;
+                setTimeout(() => {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => item.classList.remove('active'));
+                    // Selects the third item (My Clients)
+                    navItems[2].classList.add('active');
+                }, 50);
+                
+                // Sidebar Toggle Logic
+                const sidebar = document.querySelector('.sidebar');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                if (sidebar && toggleBtn) {
+                    // Restore state from LocalStorage
+                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                        sidebar.classList.add('collapsed');
+                    }
+                    toggleBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+                
+                // Filter Tabs Toggle Logic
+                const filterTabs = document.querySelectorAll('.filter-tab');
+                filterTabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        filterTabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                    });
+                });
+            })
+            .catch(error => console.error('Error loading the sidebar:', error));
+    </script>
+</body>
+</html>
