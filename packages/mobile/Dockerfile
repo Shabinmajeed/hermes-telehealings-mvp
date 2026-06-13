@@ -1,59 +1,63 @@
-# ---- Stage 1: Install dependencies ----
-FROM node:20-alpine AS mobile-deps
+# ============================================
+# Mobile Web Dockerfile — Expo web export
+# Stage 1: Install & build web export
+# Stage 2: Serve with nginx
+# ============================================
+
+# ---- Stage 1: Builder ----
+FROM node:22-alpine AS builder
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-COPY packages/mobile/package.json ./packages/mobile/package.json
+# Copy config files for dependency installation
+COPY package.json package-lock.json* pnpm-lock.yaml* ./
+COPY packages/mobile/package.json ./packages/mobile/
 COPY shared/package.json ./shared/package.json
 
-RUN npm ci
-
-# ---- Stage 2: Build web export ----
-FROM node:20-alpine AS mobile-build
-WORKDIR /app
-
-COPY --from=mobile-deps /app/node_modules ./node_modules
-COPY --from=mobile-deps /app/package.json ./package.json
-COPY --from=mobile-deps /app/package-lock.json ./package-lock.json
+# Install dependencies
+RUN npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts
 
 # Copy source
-COPY packages/mobile/ ./packages/mobile/
-COPY shared/ ./shared/
-COPY tsconfig.json ./tsconfig.json
+COPY packages/mobile ./packages/mobile
+COPY shared ./shared
 
-# Build shared first, then export web
-RUN cd shared && npx tsc 2>/dev/null || true
-RUN cd packages/mobile && npx expo export --platform web 2>/dev/null || npx expo export:web 2>/dev/null || echo "Trying alternative export..."
+# Build Expo web export
+RUN cd packages/mobile && \
+    npx expo export --platform web --output-dir dist
 
-# ---- Stage 3: Serve with nginx ----
-FROM nginx:alpine AS mobile-prod
+# ---- Stage 2: Serve with nginx ----
+FROM nginx:1.27-alpine AS production
+
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
 
 # Copy built web assets
-COPY --from=mobile-build /app/packages/mobile/dist /usr/share/nginx/html
+COPY --from=builder /app/packages/mobile/dist /usr/share/nginx/html
 
 # Custom nginx config for SPA routing
 RUN echo 'server { \
     listen 3001; \
+    server_name _; \
+    root /usr/share/nginx/html; \
+    index index.html; \
     location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
         try_files $uri $uri/ /index.html; \
     } \
     location /_expo/ { \
-        root /usr/share/nginx/html; \
         expires 1y; \
         add_header Cache-Control "public, immutable"; \
     } \
     location /assets/ { \
-        root /usr/share/nginx/html; \
         expires 1y; \
         add_header Cache-Control "public, immutable"; \
     } \
-}' > /etc/nginx/conf.d/default.conf
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://localhost:3001/ || exit 1
+    access_log /var/log/nginx/access.log; \
+    error_log /var/log/nginx/error.log; \
+}' > /etc/nginx/conf.d/app.conf
 
 EXPOSE 3001
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

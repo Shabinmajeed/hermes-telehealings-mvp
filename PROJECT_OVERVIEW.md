@@ -6,9 +6,9 @@
 Telehealings Project/
 ├── packages/                      # Main application packages
 │   ├── backend/                   # NestJS REST API (port 3000)
-│   ├── admin-web/                 # React Admin Dashboard (port 5173)
-│   ├── therapist-web/             # React Therapist App (port 5173)
-│   └── mobile/                    # Expo React Native App (port 8081)
+│   ├── web-admin/                  # React Admin Dashboard (port 5174)
+│   ├── web-therapist/              # React Therapist App (port 5173)
+│   └── mobile/                     # Expo React Native App (port 3001)
 │
 ├── docs/                          # Documentation
 │   ├── ARCHITECTURE.md            # System design & tech stack
@@ -41,7 +41,7 @@ Telehealings Project/
   - Admin (Admin features)
   - Availability (Therapist scheduling)
 
-### 2. **Admin Web (packages/admin-web/)**
+### 2. **Admin Web (packages/web-admin/)**
 - **Framework:** React 19 + Vite + TypeScript
 - **UI:** Tailwind CSS
 - **Port:** `http://localhost:5173`
@@ -52,7 +52,7 @@ Telehealings Project/
   - Therapists Management
   - Analytics
 
-### 3. **Therapist Web (packages/therapist-web/)**
+### 3. **Therapist Web (packages/web-therapist/)**
 - **Framework:** React 19 + Vite + TypeScript
 - **UI:** Tailwind CSS + Radix UI
 - **Port:** `http://localhost:5173` (separate dev server)
@@ -105,8 +105,8 @@ npm run dev
 Or start individually:
 ```bash
 npm run dev --workspace=packages/backend   # Backend on :3000
-npm run dev --workspace=packages/admin-web  # Admin on :5173
-npm run dev --workspace=packages/therapist-web  # Therapist on :5173
+npm run dev --workspace=packages/web-admin  # Admin on :5174
+npm run dev --workspace=packages/web-therapist  # Therapist on :5173
 npm run dev --workspace=packages/mobile   # Mobile on :8081
 ```
 

@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+*/node_modules
+*/*/node_modules
+
+# Build output
+dist
+*/dist
+build
+*/build
+
+# Version control
+.git
+.gitignore
+
+# IDE / editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+__tests__
+*.test.*
+*.spec.*
+
+# Misc
+README.md
+LICENSE
+*.md
+.husky
+.eslintcache

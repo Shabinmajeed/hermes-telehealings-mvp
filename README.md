@@ -114,7 +114,7 @@ hermes-telehealings-mvp/
 │   │   ├── tsconfig.json
 │   │   └── app.json
 │   │
-│   ├── therapist-web/              # Therapist Web App
+│   ├── web-therapist/             # React Therapist App (port 5173)
 │   │   ├── src/
 │   │   │   ├── pages/
 │   │   │   ├── components/
@@ -125,7 +125,7 @@ hermes-telehealings-mvp/
 │   │   ├── tsconfig.json
 │   │   └── tailwind.config.js
 │   │
-│   └── admin-web/                  # Admin Web App
+│   └── web-admin/                 # React Admin Dashboard (port 5174)
 │       ├── src/
 │       │   ├── pages/
 │       │   ├── components/
@@ -349,8 +349,8 @@ npm run build --workspace=packages/mobile
 Deploy to: Vercel, Netlify, or AWS
 
 ```bash
-npm run build --workspace=packages/therapist-web
-npm run build --workspace=packages/admin-web
+npm run build --workspace=packages/web-therapist
+npm run build --workspace=packages/web-admin
 ```
 
 See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed instructions.

@@ -1,0 +1,176 @@
+# ============================================
+# TeleHealings — Docker Compose
+# Full stack: postgres, backend, therapist-web, admin-web, nginx
+# ============================================
+
+services:
+  # ---- Redis (for email queue + WebSocket adapter + cache) ----
+  redis:
+    image: redis:7-alpine
+    container_name: telehealings-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - telehealings-net
+
+  # ---- PostgreSQL Database ----
+  postgres:
+    image: postgres:16-alpine
+    container_name: telehealings-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: telehealings
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-telehealings_secret}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d telehealings"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - telehealings-net
+
+  # ---- Backend (NestJS) ----
+  backend:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    container_name: telehealings-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-telehealings_secret}@postgres:5432/telehealings?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_EXPIRY: ${JWT_EXPIRY:-15m}
+      JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-7d}
+      PORT: 5172
+      CLIENT_URL: http://localhost
+      THERAPIST_URL: http://localhost/therapist
+      ADMIN_URL: http://localhost/admin
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-TeleHealings <noreply@telehealings.com>}
+      APP_URL: http://localhost
+      REDIS_HOST: ${REDIS_HOST:-localhost}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-pk_test_placeholder}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_placeholder}
+    ports:
+      - "5175:5172"
+    volumes:
+      - uploads_data:/app/uploads
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5172/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - telehealings-net
+
+  # ---- Therapist Web (React/Vite) ----
+  therapist-web:
+    build:
+      context: .
+      dockerfile: packages/web-therapist/Dockerfile
+      args:
+        VITE_API_URL: http://localhost/api
+        VITE_WS_URL: ws://localhost/api/chat
+    container_name: telehealings-therapist-web
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - telehealings-net
+
+  # ---- Admin Web (React/Vite) ----
+  admin-web:
+    build:
+      context: .
+      dockerfile: packages/web-admin/Dockerfile
+      args:
+        VITE_API_URL: http://localhost/api
+        VITE_WS_URL: ws://localhost/api/chat
+    container_name: telehealings-admin-web
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - telehealings-net
+
+  # ---- Nginx Reverse Proxy ----
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: telehealings-nginx
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+      therapist-web:
+        condition: service_healthy
+      admin-web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - telehealings-net
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  telehealings-net:
+    driver: bridge

@@ -1,34 +1,33 @@
 {
-  "name": "hermes-telehealings-mvp",
-  "version": "1.0.0",
-  "description": "TeleHealings MVP - Complete Telehealth Platform (Backend + Mobile + Web Apps)",
+  "name": "telehealings",
   "private": true,
+  "version": "1.0.0",
+  "description": "TeleHealings — Wellness/Therapy Platform",
   "workspaces": [
-    "packages/backend",
-    "packages/mobile",
-    "packages/therapist-web",
-    "packages/admin-web"
+    "shared",
+    "packages/*"
   ],
   "scripts": {
-    "install-all": "npm install",
-    "start": "npm run start --workspaces",
-    "start:backend": "npm start --workspace=packages/backend",
-    "start:mobile": "npm start --workspace=packages/mobile",
-    "start:therapist": "npm start --workspace=packages/therapist-web",
-    "start:admin": "npm start --workspace=packages/admin-web",
-    "dev": "npm run dev --workspaces",
-    "build": "npm run build --workspaces",
-    "test": "npm test --workspaces",
-    "lint": "npm run lint --workspaces"
+    "dev:mobile": "cd packages/mobile && npx expo start --web --port 3001",
+    "dev:admin": "cd packages/web-admin && npx vite --host 0.0.0.0 --port 5174",
+    "dev:therapist": "cd packages/web-therapist && npx vite --host 0.0.0.0 --port 5173",
+    "dev:backend": "cd packages/backend && npm run start:dev",
+    "build:shared": "cd shared && npx tsc",
+    "build:all": "npm run build:shared && cd packages/web-admin && npx vite build && cd ../web-therapist && npx vite build",
+    "db:generate": "cd packages/backend && npx prisma generate",
+    "db:migrate": "cd packages/backend && npx prisma migrate dev",
+    "db:studio": "cd packages/backend && npx prisma studio"
   },
-  "keywords": [
-    "telehealth",
-    "therapy",
-    "healthcare",
-    "react-native",
-    "nestjs",
-    "react"
-  ],
-  "author": "Shabin Majeed",
-  "license": "MIT"
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@nestjs/platform-socket.io": "^11.1.26",
+    "@nestjs/websockets": "^11.1.26",
+    "socket.io": "^4.8.3",
+    "statuses": "^2.0.2"
+  }
 }
